@@ -1,0 +1,73 @@
+<div fxLayout="column">
+  <div fxLayout="row">
+    <div class="width33"><h3 style="font-weight:300;">Username</h3></div>
+    <div><h4 style="font-weight:300;">: {{currentUser.username}}</h4></div>
+  </div>
+  <div fxLayout="row">
+    <div class="width33"><h3 style="font-weight:300;">Roles</h3></div>
+  </div>
+</div>
+
+<div class="flex-container section-setting">
+  <div class="flex-left width33 text-left">
+    <mat-slide-toggle class="padtop" [(ngModel)]="isAdmin" (change)="onAdmin($event.checked)">Admin</mat-slide-toggle>
+  </div>
+</div>
+
+<div class="flex-container section-setting">
+  <div class="flex-left width33 text-left">
+    <mat-slide-toggle class="padtop" [(ngModel)]="isIUser" (change)="onInven($event.checked)">Inventory - User</mat-slide-toggle>
+  </div>
+  <div class="flex-right width60 text-left">
+    <mat-slide-toggle class="padtop" [(ngModel)]="isIManager" [disabled]="isInvenDisabled" (change)="onIManager($event.checked)">Manager</mat-slide-toggle>
+  </div>
+</div>
+
+<div class="flex-container section-setting">
+  <div class="flex-left width33 text-left">
+    <mat-slide-toggle class="padtop" [(ngModel)]="isPUser" (change)="onPartner($event.checked)">Partner - User</mat-slide-toggle>
+  </div>
+  <div class="flex-right width60 text-left">
+    <mat-slide-toggle class="padtop" [(ngModel)]="isPManager" [disabled]="isPartnerDisabled" (change)="onPManager($event.checked)">Manager</mat-slide-toggle>
+  </div>
+</div>
+
+<div class="flex-container section-setting">
+  <div class="flex-left width33 text-left">
+    <mat-slide-toggle class="padtop" [(ngModel)]="isTUser" (change)="onTrans($event.checked)">Transaction - User</mat-slide-toggle>
+  </div>
+  <div class="flex-right width60 text-left">
+    <mat-slide-toggle class="padtop" [(ngModel)]="isTManager" [disabled]="isTransDisabled" (change)="onTManager($event.checked)">Manager</mat-slide-toggle>
+  </div>
+</div>
+<br/><br/>
+<div class="quick_add" (click)="test()">
+  <button class="submit">Save</button>
+</div>
+
+<ng-template #loggedOut>
+  Please login.
+</ng-template>
+
+<!--<div class="container" *ngIf="currentUser; else loggedOut">
+  <header class="jumbotron">
+    <h3>
+      <strong>{{ currentUser.username }}</strong> Profile
+    </h3>
+  </header>
+  <p>
+    <strong>Token:</strong>
+    {{ currentUser.accessToken.substring(0, 20) }} ...
+    {{ currentUser.accessToken.substr(currentUser.accessToken.length - 20) }}
+  </p>
+  <p>
+    <strong>Email:</strong>
+    {{ currentUser.email }}
+  </p>
+  <strong>Roles:</strong>
+  <ul>
+    <li *ngFor="let role of currentUser.roles">
+      {{ role }}
+    </li>
+  </ul>
+</div>-->

@@ -1,0 +1,46 @@
+<div class="flex-container">
+	<div class="flex-left">
+		<div (click)="openQuickAdd()" class="submit-form quick_add">
+    		<button class="submit">+ Tambah</button>
+  		</div>
+	</div>
+
+	<div class="flex-right">
+		<input type="text" class="inputs" placeholder="Search data" (keyup)="applyFilter($event)">
+	</div>
+</div>
+
+<div class="table-container">
+<mat-table #table [dataSource]="dataSource" class="mat-table">
+  <ng-container matColumnDef="code">
+    <th class="th-style" fxFlex="25%" mat-header-cell *matHeaderCellDef>Kode</th>
+    <td class="tr-style" fxFlex="25%" mat-cell *matCellDef="let partners">
+      {{partners.code}}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="name">
+    <th class="th-style" fxFlex="50%" mat-header-cell *matHeaderCellDef>Nama</th>
+    <td class="tr-style" fxFlex="50%" mat-cell *matCellDef="let partners">
+      {{partners.name}}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="phone">
+    <th class="th-style" fxFlex="25%" mat-header-cell *matHeaderCellDef>Telephone/HP</th>
+    <td class="tr-style" fxFlex="25%" mat-cell *matCellDef="let partners">
+      {{partners.phone}}
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns" class="tableHeader"></tr>
+  <tr mat-row class="tableRow" 
+      *matRowDef="let row; columns: displayedColumns;"
+      (click)="openDialog(row)"
+      [class.active]="clickedRows == row"
+  ></tr>
+</mat-table>
+</div>
+
+<div fxLayout="row" fxLayoutAlign="space-between center">
+  <button class="btn-gradient text-gradient upload" (click)="openUpload()">Unggah</button>
+  <mat-paginator [pageSizeOptions]="[10, 20, 50, 100]" showFirstLastButtons></mat-paginator>
+</div>

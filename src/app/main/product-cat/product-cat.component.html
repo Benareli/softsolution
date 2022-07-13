@@ -1,0 +1,55 @@
+<div class="flex-container">
+	<div class="flex-left">
+		<div *ngIf="isIM || isAdm" class="submit-form">
+    		<div fxLayout="row">
+            <input #input maxlength="6" type="text" class="inputs" name="catid" [(ngModel)]="productcatadd.catid" required id="catid" placeholder="ID Kategori * (max 6 char)">
+            <input style="margin-left: 9pt" type="text" class="inputs" name="description" [(ngModel)]="productcatadd.description" required id="description" placeholder="Nama *">
+            <div (click)="saveProductCat()" class="quick_add">
+      			<button class="submit">+ Tambah</button></div>
+    		</div>
+  		</div>
+	</div>
+
+	<div class="flex-right">
+    <div fxLayout="row">
+      <input type="text" class="inputs" placeholder="Search data" (keyup)="applyFilter($event)">
+      <div (click)="toggleDisplay()" class="submit-form quick_add">
+        <button class="submit">Filter</button>
+      </div>
+    </div>
+	</div>
+</div>
+
+<div fxLayout="row" fxLayoutAlign="space-around center" class="filtered" *ngIf="isShow">
+  <div *ngIf="isIM || isAdm" fxLayout="column">
+    <button class="submit" style="font-size: .7em; margin-top:5pt" (click)="searchActive()">aktif</button>
+    <button class="submit pink" style="font-size: .65em; margin-top:5pt" (click)="searchInactive()">nonaktif</button>
+  </div>
+</div>
+
+<div class="table-container">
+<mat-table #table [dataSource]="dataSource" class="mat-table">
+  <ng-container matColumnDef="id">
+    <th class="th-style" fxFlex="25%" mat-header-cell *matHeaderCellDef>ID</th>
+    <td class="tr-style" fxFlex="25%" mat-cell *matCellDef="let productcats">
+      <span *ngIf="productcats.active==false" class="inactive">&nbsp;&nbsp;</span>
+      {{productcats.catid}}</td>
+  </ng-container>
+  <ng-container matColumnDef="name">
+    <th class="th-style" fxFlex="50%" mat-header-cell *matHeaderCellDef>Nama</th>
+    <td class="tr-style" fxFlex="50%" mat-cell *matCellDef="let productcats">{{productcats.description}}</td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns" class="tableHeader"></tr>
+  <tr mat-row class="tableRow" 
+      *matRowDef="let row; columns: displayedColumns;"
+      (click)="openDialog(row)"
+      [class.active]="clickedRows == row"
+  ></tr>
+</mat-table>
+</div>
+
+<div fxLayout="row" fxLayoutAlign="space-between center">
+  <button class="btn-gradient text-gradient upload" (click)="openUpload()">Unggah Data</button>
+  <mat-paginator [pageSizeOptions]="[10, 20, 50, 100]" showFirstLastButtons></mat-paginator>
+</div>

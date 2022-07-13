@@ -1,0 +1,213 @@
+<div class="basic-container submit-form" fxLayout="column" fxLayoutAlign="space-between center" >
+<div class="width-100" style="overflow-y: scroll;">
+  <div class="marginbot" fxLayout="row" fxLayoutAlign="space-between center">
+    <mat-button-toggle-group class="active_btn" #group="matButtonToggleGroup" [(value)]="statusActive" (change)="onValChange(group.value)">
+      <mat-button-toggle value="true">Aktif</mat-button-toggle>
+      <mat-button-toggle value="false">Nonaktif</mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <mat-button-toggle-group class="active_btn margin_7" *ngIf="isNew" #group2="matButtonToggleGroup" [(value)]="datisstock" (change)="onStockChange(group2.value)">
+      <mat-button-toggle class="paddingstock" value="true">Stock</mat-button-toggle>
+      <mat-button-toggle class="paddingstock" value="false">Jasa</mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <mat-button-toggle-group class="active_btn margin_7" *ngIf="!isNew" [disabled]="isDis" #group2="matButtonToggleGroup" [(value)]="datisstock" (change)="onStockChange(group2.value)">
+      <mat-button-toggle class="paddingstock" value="true">Stock</mat-button-toggle>
+      <mat-button-toggle class="paddingstock" value="false">Jasa</mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <button class="close_btn" mat-button (click)="closeDialog()">X</button>
+  </div>
+
+  <div class="flexfull">
+    <div class="flex35">
+      <div fxLayout="column" class="imagecont">
+        <div fxLayout="row" fxLayoutAlign="space-around start">
+          <ul *ngFor="let image of imageInfos | async" class="uldialog">
+            <li *ngIf="(image.name == oriimage)" class="uldialog">
+              <img src="{{ image.url }}" alt="{{ image.name }}" height="100px"/>
+            </li>
+          </ul>
+          <div><img style="max-height: 100px;" *ngFor='let preview of previews' [src]="preview" class="preview"></div>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="space-around start" style="margin-top:-5pt;">
+          <!--class="choosefile submit pink"-->
+          <input class="choosefile" type="file" accept="image/*" (change)="selectFiles($event)" />
+          <button class="save_btn" style="font-size:.8em;" [disabled]="!selectedFiles" (click)="uploadFiles()">Unggah</button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="flex65 margin_7">
+      <div fxLayout="column">
+        <div class="flexfull">
+          <div class="holder flex50">
+            <div class="descrip">SKU</div>
+            <input class="inputs width-90" maxlength="10" placeholder="SKU" [(ngModel)]="datsku">
+          </div>
+
+          <div class="holder flex50 margin_7">
+            <div class="descrip">Nama *</div>
+            <input class="inputs width-90" placeholder="Name" [(ngModel)]="datname">
+          </div>
+        </div>
+        <div class="holder" style="margin-top:7pt;">
+            <div class="descrip">Deskripsi</div>
+            <input class="inputs width-90" placeholder="Deskripsi" [(ngModel)]="datdesc">
+        </div>
+        <div class="holder" style="margin-top:7pt;">
+            <div class="descrip">Barcode</div>
+            <input class="inputs width-90" placeholder="Barcode" [(ngModel)]="datbarcode">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flexfull">
+    <div class="flex50">
+      <div class="holder-row" style="margin-top:7pt;">
+        <div class="descrip flex30 harga">Harga Jual *</div>
+        <input class="inputs flex70" placeholder="Harga Jual" type="number" [(ngModel)]="datlprice">
+      </div>
+      <div class="holder-row" style="margin-top:7pt;">
+        <div class="descrip flex30 harga">Harga Batas</div>
+        <input class="inputs flex70" placeholder="0" type="number" [(ngModel)]="datbprice">
+      </div>
+      <div class="alert" role="alert" *ngIf="bbigger">Harga Batas tidak bisa lebih besar!</div>
+      <div class="holder-row" style="margin-top:7pt;">
+        <div class="descrip flex30 harga">HPP</div>
+        <input class="inputs flex70" placeholder="0" type="number" [(ngModel)]="datcost">
+      </div>
+      <div class="holder-row" style="margin-top:7pt;">
+        <div class="descrip flex25 harga">Pajak Masuk</div>
+        <div class="flex25">
+          <select class="inputs" [(ngModel)]="taxinid">
+            <option value=""></option>
+            <option *ngFor="let tax of taxs" [value]="tax.id">
+            {{ tax.name }}
+            </option>
+          </select>
+        </div>
+        <div class="descrip flex25 harga">Pajak Keluar</div>
+        <div class="flex25">
+          <select class="inputs" [(ngModel)]="taxoutid">
+            <option value=""></option>
+            <option *ngFor="let tax of taxs" [value]="tax.id">
+            {{ tax.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="holder-row" style="margin-top:7pt;">
+        <div class="descrip flex25 harga">Min</div>
+        <div class="flex25">
+          <input class="inputs flex70" placeholder="0" type="number" [(ngModel)]="datmin">
+        </div>
+        <div class="descrip flex25 harga">Max</div>
+        <div class="flex25">
+          <input class="inputs flex70" placeholder="0" type="number" [(ngModel)]="datmax">
+        </div>
+      </div>
+    </div>
+
+    <div class="flex50 holder margin_7">
+      <div fxLayout="row" style="margin-top:7pt;">
+        <div class="flex33 descrip">Kategori *</div>
+        <select class="inputs flex70 width-100" [(ngModel)]="categoryid">
+          <option value=""></option>
+          <option *ngFor="let productcat of productcats" [value]="productcat.id">
+            {{ productcat.description }}
+          </option>
+        </select>
+      </div>
+
+      <div fxLayout="row" style="margin-top:7pt;">
+        <div class="flex33 descrip">Merek</div>
+        <select class="inputs flex70 width-100" [(ngModel)]="brandid">
+          <option value=""></option>
+          <option *ngFor="let brand of brands" [value]="brand.id">
+            {{ brand.description }}
+          </option>
+        </select>
+      </div>
+
+      <div fxLayout="row" style="margin-top:7pt;">
+        <div class="flex33 descrip">Supplier</div>
+        <select class="inputs flex70 width-100" [(ngModel)]="partnerid">
+          <option value=""></option>
+          <option *ngFor="let partner of partners" [value]="partner.id">
+            {{ partner.name }}
+          </option>
+        </select>
+      </div>
+
+      <div class="holder-row" style="margin-top:7pt;">
+        <div class="descrip flex25 harga">Satuan Jual</div>
+        <div class="flex25">
+          <select class="inputs" [(ngModel)]="datsuom">
+            <option value=""></option>
+            <option *ngFor="let uom of uoms" [value]="uom.id">
+            {{ uom.uom_name }}
+            </option>
+          </select>
+        </div>
+        <div class="descrip flex25 harga">Satuan Beli</div>
+        <div class="flex25">
+          <select class="inputs" [(ngModel)]="datpuom">
+            <option value=""></option>
+            <option *ngFor="let uom of uoms" [value]="uom.id">
+            {{ uom.uom_name }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+  <div class="flexfull">
+  
+  </div>
+</div>
+
+<mat-table *ngIf="!isCG" #table [dataSource]="dataSource" class="mat-table">
+  <ng-container matColumnDef="warehouse">
+    <th class="th-style" fxFlex="40%" mat-header-cell *matHeaderCellDef>Gudang</th>
+    <td class="tr-style" fxFlex="40%" mat-cell *matCellDef="let qops">
+      {{qops.warehouse.name}}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="partner">
+    <th class="th-style" fxFlex="40%" mat-header-cell *matHeaderCellDef>Supplier</th>
+    <td class="tr-style" fxFlex="40%" mat-cell *matCellDef="let qops">
+      <div *ngIf="!qops.partner"></div>
+      <div *ngIf="qops.partner">{{qops.partner.name}}</div>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="qty">
+    <th class="th-style" fxFlex="20%" mat-header-cell *matHeaderCellDef>Qty</th>
+    <td class="tr-style" fxFlex="20%" mat-cell *matCellDef="let qops">
+      {{qops.qop}}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="cost">
+    <th class="th-style" fxFlex="20%" mat-header-cell *matHeaderCellDef>HPP</th>
+    <td class="tr-style" fxFlex="20%" mat-cell *matCellDef="let qops">
+      {{qops.cost | number : '1.2-2' }}
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns" class="tableHeader"></tr>
+  <tr mat-row class="tableRow" 
+      *matRowDef="let row; columns: displayedColumns;"
+  ></tr>
+</mat-table>
+
+<div class="width-100" fxLayout="row" fxLayoutAlign="space-between center">
+  <div class="width-90">
+    <button *ngIf="!isNew" [disabled]="isRes" mat-button class="submit save_btn" (click)="checkBigger()">Simpan</button>
+    <button *ngIf="isNew" [disabled]="isRes" mat-button class="submit save_btn" (click)="checkBigger()">Simpan</button>
+  </div>
+  <div class="width-10"><button class="log_btn" [(ngModel)]="log"><mat-icon>message</mat-icon> {{log}}</button></div>
+</div>
+</div>
