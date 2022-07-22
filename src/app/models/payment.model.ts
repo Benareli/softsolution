@@ -10,5 +10,6 @@ export class Payment {
     pay2method?: string;
     pay2note?: string;
     change?: number;
-    changeMethod?: string
+    changeMethod?: string;
+    date?: Date;
 }

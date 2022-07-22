@@ -5,4 +5,5 @@ export class Id {
 	pos_id?: number;
 	pos_session?: number;
 	transfer_id?: number;
+	purchase_id?: number;
 }

@@ -1,17 +1,17 @@
 <div class="basic-container submit-form" fxLayout="column" fxLayoutAlign="space-between center" >
-<div class="width-100">
+<div class="width-100" style="overflow-y: scroll;">
   <div class="marginbot" fxLayout="row" fxLayoutAlign="space-between center">
-    <h2>Pembelian</h2>
+    <h2>Pembelian {{purchaseid}}</h2>
     <button class="close_btn" mat-button (click)="closeDialog()">X</button>
   </div>
-
+  
   <div fxLayout="row" class="width100" fxLayoutAlign="space-between start">
     <div class="flex50 text-left">
       <div fxLayout="column">
         <div fxLayout="row">
           <div class="flex30">Supplier</div>
           <div class="flex70">
-            <select class="inputs width-90" [(ngModel)]="supplierString">
+            <select class="inputs width-90" [disabled]="this.lock" [(ngModel)]="supplierString">
             <option *ngFor="let partner of partners" [value]="partner.id">
                 {{ partner.name }}
             </option>
@@ -24,7 +24,7 @@
         <div fxLayout="row">
           <div class="flex30">Gudang</div>
           <div class="flex70">
-            <select class="inputs width-90" [(ngModel)]="warehouseString">
+            <select class="inputs width-90" [disabled]="this.lock" [(ngModel)]="warehouseString">
             <option *ngFor="let warehouse of warehouses" [value]="warehouse.id">
                 {{ warehouse.name }}
             </option>
@@ -38,40 +38,44 @@
         <div fxLayout="row">
           <div class="flex30">Date</div>
           <div class="flex70">
-            <input type="date" class="inputs width-90"/>
+            <input type="date" class="inputs width-90" [disabled]="this.lock" [(ngModel)]="datdate"/>
+          </div>
+        </div>
+      </div>
+      <br/>
+      <div fxLayout="column">
+        <div fxLayout="row">
+          <div class="flex30">Expected Date</div>
+          <div class="flex70">
+            <input type="date" class="inputs width-90" [disabled]="this.lock" [(ngModel)]="datexpected"/>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!--<table class="sjs-table">
-    <tr *ngFor="let row of data1">
-      <td *ngFor="let val of row">
-        {{val}}
-      </td>
-    </tr>
-  </table>-->
-
- 
   <table class="table-new">
     <tr>
-      <th class="th-new" style="border-left:1px solid #ccc;" fxFlex="20%">Product</th>
-      <th class="th-new" fxFlex="10%">Qty</th>
+      <th class="th-new" style="border-left:1px solid #ccc;" fxFlex="35%">Product</th>
+      <th class="th-new" fxFlex="7%">Qty</th>
+      <th class="th-new" fxFlex="7%">Qty Done</th>
       <th class="th-new" fxFlex="20%">Harga Satuan</th>
-      <th class="th-new" fxFlex="10%">Diskon(%)</th>
-      <th class="th-new" fxFlex="10%">Pajak(%)</th>
-      <th class="th-new" fxFlex="30%">Subtotal</th>
+      <th class="th-new" fxFlex="5%">Disc(%)</th>
+      <th class="th-new" fxFlex="5%">Tax(%)</th>
+      <th class="th-new" fxFlex="16%">Subtotal</th>
+      <th class="th-new" fxFlex="5%"></th>
     </tr>
-    <tr>
-      <td class="td-new" style="border-left:1px solid #ddd;" fxFlex="20%">
+    <tr *ngIf="!this.lock">
+      <td class="td-new" style="border-left:1px solid #ddd;" fxFlex="35%">
         <input class="inputs width-100" (focus)="onF()" placeholder="{{ph}}" [(ngModel)]="term"/></td>
-      <td class="td-new" fxFlex="10%"><input class="inputs width-100" (blur)="calculate()" [(ngModel)]="datqty"/></td>
+      <td class="td-new" fxFlex="7%"><input class="inputs width-100" (blur)="calculate()" [(ngModel)]="datqty"/></td>
+      <td class="td-new" fxFlex="7%"><input class="inputs width-100" 
+        disabled style="background: #f3f3f3;"/></td>
       <td class="td-new" fxFlex="20%"><input class="inputs width-100" (blur)="calculate()" [(ngModel)]="datcost"/></td>
-      <td class="td-new" fxFlex="10%"><input class="inputs width-100" [(ngModel)]="datdisc"/></td>
-      <td class="td-new" fxFlex="10%"><input class="inputs width-100" [(ngModel)]="dattax"/></td>
-      <td class="td-new" fxFlex="20%"><input disabled class="inputs width-100" [(ngModel)]="datsub"/></td>
-      <td class="td-new btn-rainbow" style="text-align:center;" fxFlex="10%"><button style="width:100%;background:none;border:none;color:white;" (click)="pushing()">TAMBAH</button></td>
+      <td class="td-new" fxFlex="5%"><input class="inputs width-100" (blur)="calculate()" [(ngModel)]="datdisc"/></td>
+      <td class="td-new" fxFlex="5%"><input class="inputs width-100" (blur)="calculate()" [(ngModel)]="dattax"/></td>
+      <td class="td-new" fxFlex="16%"><input disabled class="inputs width-100" [(ngModel)]="datsub"/></td>
+      <td class="td-new btn-rainbow" style="text-align:center;" fxFlex="5%"><button style="width:100%;background:none;border:none;color:white;" (click)="pushing()">+</button></td>
     </tr>
   </table>
 
@@ -86,84 +90,92 @@
 
   <mat-table #table [dataSource]="dataSource" class="mat-table">
   <ng-container matColumnDef="product">
-    <th class="th-style" fxFlex="20%" mat-header-cell *matHeaderCellDef>Product</th>
-    <td class="tr-style" fxFlex="20%" mat-cell *matCellDef="let datas">
-      {{datas.product}}
+    <td class="tr-style" fxFlex="35%" mat-cell *matCellDef="let datas">
+      <span *ngIf="datas.purchase_id">{{datas.product.name}}</span>
+      <span *ngIf="!datas.purchase_id">{{datas.product}}</span>
     </td>
   </ng-container>
   <ng-container matColumnDef="qty">
-    <th class="th-style" fxFlex="10%" mat-header-cell *matHeaderCellDef>Qty</th>
-    <td class="tr-style" fxFlex="10%" mat-cell *matCellDef="let datas">
-      {{datas.qty}}
+    <td class="tr-style text-right" fxFlex="7%" mat-cell *matCellDef="let datas">
+      {{datas.qty | number}}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="qty_done">
+    <td class="tr-style text-right" fxFlex="7%" mat-cell *matCellDef="let datas">
+      {{datas.qty_done | number}}
     </td>
   </ng-container>
   <ng-container matColumnDef="price_unit">
-    <th class="th-style" fxFlex="20%" mat-header-cell *matHeaderCellDef>Harga Satuan</th>
-    <td class="tr-style" fxFlex="20%" mat-cell *matCellDef="let datas">
-      {{datas.price_unit}}
+    <td class="tr-style text-right" fxFlex="20%" mat-cell *matCellDef="let datas">
+      {{datas.price_unit | number}}
     </td>
   </ng-container>
   <ng-container matColumnDef="discount">
-    <th class="th-style" fxFlex="10%" mat-header-cell *matHeaderCellDef>Diskon</th>
-    <td class="tr-style" fxFlex="10%" mat-cell *matCellDef="let datas">
-      {{datas.discount}}
+    <td class="tr-style text-right" fxFlex="5%" mat-cell *matCellDef="let datas">
+      {{datas.discount | number}}
     </td>
   </ng-container>
   <ng-container matColumnDef="tax">
-    <th class="th-style" fxFlex="10%" mat-header-cell *matHeaderCellDef>Pajak</th>
-    <td class="tr-style" fxFlex="10%" mat-cell *matCellDef="let datas">
-      {{datas.tax}}
+    <td class="tr-style text-right" fxFlex="5%" mat-cell *matCellDef="let datas">
+      {{datas.tax | number}}
     </td>
   </ng-container>
   <ng-container matColumnDef="subtotal">
-    <th class="th-style text-center" fxFlex="20%" mat-header-cell *matHeaderCellDef>Subtotal</th>
-    <td class="tr-style text-right" fxFlex="20%" mat-cell *matCellDef="let datas">
-      {{datas.subtotal}}
+    <td class="tr-style text-right" fxFlex="16%" mat-cell *matCellDef="let datas">
+      {{datas.subtotal | number}}
     </td>
   </ng-container>
   <ng-container matColumnDef="action">
-    <th class="th-style" fxFlex="10%" mat-header-cell *matHeaderCellDef>Aksi</th>
-    <td class="tr-style" fxFlex="10%" mat-cell *matCellDef="let datas">
-      Edit
+    <td class="tr-style" fxFlex="5%" mat-cell *matCellDef="let datas">
+      <a class="add_stock" *ngIf="this.edit" ><mat-icon class="mat-icon" 
+        (click)="deletePODetail(dataSource.filteredData.indexOf(datas), datas.id, datas.product)">delete</mat-icon></a>
+      <!--(click)="deletePODetail(datas.id)"-->
     </td>
   </ng-container>
 
   <!--<tr mat-header-row *matHeaderRowDef="displayedColumns" class="tableHeader"></tr>-->
   <tr mat-row class="tableRow" 
       *matRowDef="let row; columns: displayedColumns;"
+      
   ></tr>
 </mat-table>
   <table class="table-new text-right" style="margin-top:2pt;">
     <tr>
       <td fxFlex="50%"></td>
-      <td class="td-total" fxFlex="20%">Subtotal</td>
-      <td class="td-total" fxFlex="20%">Rp. xxx</td>
-      <td class="td-total" fxFlex="10%"></td>
+      <td class="td-total" fxFlex="25%">Subtotal</td>
+      <td class="td-total text-right" fxFlex="20%">Rp. {{thissub | number}}</td>
+      <td class="td-total" fxFlex="5%"></td>
     </tr>
     <tr>
-      <td fxFlex="50%"></td>
-      <td class="td-total" fxFlex="20%">Disc</td>
-      <td class="td-total" fxFlex="20%">Rp. xxx</td>
-      <td class="td-total" fxFlex="10%"></td>
+      <td fxFlex="50%" class="text-center"><font *ngIf="data" style="font-size: 10pt;">{{persenqty | number}}% Barang Diterima</font></td>
+      <td class="td-total" fxFlex="25%">Disc</td>
+      <td class="td-total text-right" fxFlex="20%">Rp. {{thisdisc | number}}</td>
+      <td class="td-total" fxFlex="5%"></td>
     </tr>
     <tr>
-      <td fxFlex="50%"></td>
-      <td class="td-total" fxFlex="20%">Tax</td>
-      <td class="td-total" fxFlex="20%">Rp. xxx</td>
-      <td class="td-total" fxFlex="10%"></td>
+      <td fxFlex="50%" class="text-center"><mat-progress-bar mode="determinate" style="width: 200pt !important; margin: 0 auto;" [value]="persenqty" *ngIf="data"></mat-progress-bar></td>
+      <td class="td-total" fxFlex="25%">Tax</td>
+      <td class="td-total text-right" fxFlex="20%">Rp. {{thistax | number}}</td>
+      <td class="td-total" fxFlex="5%"></td>
     </tr>
     <tr>
-      <td fxFlex="50%"></td>
-      <td class="td-total" fxFlex="20%"><b>TOTAL</b></td>
-      <td class="td-total" fxFlex="20%"><b>Rp. xxx</b></td>
-      <td class="td-total" fxFlex="10%"></td>
+      <td fxFlex="50% text-center">
+        <div fxLayout="row" fxLayoutAlign="space-around center">
+          <button class="save_btn_white flex50" (click)="receivePartial()" *ngIf="data && persenqty! < 100" style="font-size: 12pt;">Terima Sebagian</button>
+          <button class="save_btn flex50" (click)="receiveAll()" *ngIf="data && persenqty! < 100" style="font-size: 12pt;">Terima Semua</button>
+        </div>
+      </td>
+      <td class="td-total" fxFlex="25%"><b>TOTAL</b></td>
+      <td class="td-total text-right" fxFlex="20%"><b>Rp. {{thistotal | number}}</b></td>
+      <td class="td-total" fxFlex="5%"></td>
     </tr>
   </table>
 </div>
 
 <div class="width-100" fxLayout="row" fxLayoutAlign="space-between center">
   <div class="width-90">
-    <button mat-button [disabled]="isRes" class="save_btn" (click)="updateData()">Simpan</button>
+    <button mat-button [disabled]="isRes" *ngIf="!this.lock" class="save_btn" (click)="startPO()">Simpan</button>
+    <button mat-button [disabled]="isRes" *ngIf="this.lock" class="save_btn" style="background: #fff; color: #3f5efb;" (click)="editPO()">{{edit_text}}</button>
   </div>
   <div class="width-10"><button class="log_btn" [(ngModel)]="log"><mat-icon>message</mat-icon> {{log}}</button></div>
 </div>

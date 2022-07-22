@@ -90,6 +90,7 @@ export class PosComponent {
   posid?: string;
   payid?: string;
   prefixes?: string;
+  today?: Date;
 
   isRightShow = false;
 
@@ -283,7 +284,7 @@ export class PosComponent {
       this.calculateTotal();
     }
   }
-
+ 
   calculateTotal() {
     if(Number(this.disc)>0 || !this.disc){
       if(!this.isPercent) this.total = this.subtotal - Number(this.disc) + this.tax;
@@ -378,6 +379,7 @@ export class PosComponent {
           product_name: product.name,
           suom: product.suom.uom_name,
           uom: product.suom._id,
+          fg: product.fg,
           tax: taxes,
           taxes: taxes/100 * product!.listprice!,
           isStock: product.isStock,
@@ -442,6 +444,7 @@ export class PosComponent {
               product_name: pro.name,
               suom: pro.suom.uom_name,
               uom: pro.suom._id,
+              fg: pro.fg,
               partner: qops.part_id,
               qop: qops.id,
               tax: taxes,
@@ -534,6 +537,7 @@ export class PosComponent {
   }
 
   paying(res: any): void {
+    this.today = new Date();
     if(Number(res.payment1)==0) res.pay1Type = null;
     if(Number(res.payment2)==0) res.pay2Type = null;
     if(!this.globals.pos_session_id || this.globals.pos_session_id == null
@@ -555,7 +559,8 @@ export class PosComponent {
         };
         const payments = {pay_id: this.payid,session: this.sess_id,order_id: this.posid,
           amount_total: this.total,payment1: res.payment1,pay1method: res.pay1Type,
-          payment2: res.payment2,pay2method: res.pay2Type,change: res.change,changeMethod: "tunai"
+          payment2: res.payment2,pay2method: res.pay2Type,change: res.change,changeMethod: "tunai",
+          date: this.today
         };
         this.paymentService.create(payments)
           .subscribe(res => {
@@ -583,6 +588,7 @@ export class PosComponent {
       amount_total: this.total,
       user: this.globals.userid,
       payment: payment,
+      date: this.today,
       session: this.sess_id
     };
     this.posService.create(posdata)
@@ -599,7 +605,8 @@ export class PosComponent {
     if(this.orders.length>0){
       this.createDetail(orderid, this.orders[0].qty, this.orders[0].price_unit,
         this.orders[0].subtotal, this.orders[0].product, this.orders[0].partner,
-        this.orders[0].isStock.toString(), this.orders[0].qop, this.orders[0].uom);
+        this.orders[0].isStock.toString(), this.orders[0].qop, this.orders[0].uom,
+        this.orders[0].fg);
     }else{
       this.total = 0;
       this.subtotal = 0;
@@ -609,18 +616,20 @@ export class PosComponent {
   }
 
   createDetail(orderid:string, qty:number, price_unit:number, subtotal:number, 
-    product:string, partner:string, isStock:string, qop: string, uom: string): void {
+    product:string, partner:string, isStock:string, qop: string, uom: string, fg: boolean): void {
       const posdetail = {
         ids: orderid,
         order_id: this.posid,
         qty: qty,
         uom: uom,
+        fg: fg,
         partner: partner,
         price_unit: price_unit,
         subtotal: subtotal,
         product: product,
         isStock: isStock,
         qop: qop,
+        date: this.today,
         warehouse: this.warehouseid,
         user: this.globals.userid,
         meth: this.globals.cost_general

@@ -24,8 +24,9 @@ type AOA = any[][];
 })
 export class UploadDialogComponent implements OnInit {
   isPM = false;
-  isTM = false;
   isIM = false;
+  isPURM = false;
+  isPOSM = false;
   isAdm = false;
   isRes = false;
   checker = 0;
@@ -114,12 +115,13 @@ export class UploadDialogComponent implements OnInit {
 
   checkRole(): void {
     for(let x=0; x<this.globals.roles!.length;x++){
-      if(this.globals.roles![x]=="trans_manager") this.isTM=true;
+      if(this.globals.roles![x]=="purchase_manager") this.isPURM=true;
+      if(this.globals.roles![x]=="pos_manager") this.isPOSM=true;
       if(this.globals.roles![x]=="inventory_manager") this.isIM=true;
       if(this.globals.roles![x]=="partner_manager") this.isPM=true;
       if(this.globals.roles![x]=="admin") this.isAdm=true;
     };
-    if(!this.isPM || !this.isTM || !this.isIM || !this.isAdm) this.isRes = true;
+    if(!this.isPM || !this.isPURM || !this.isPOSM || !this.isIM || !this.isAdm) this.isRes = true;
   }
 
   onFileChange(event: any) {
@@ -231,6 +233,4 @@ export class UploadDialogComponent implements OnInit {
       this.startSequence();
     }
   }
-
-  
 }

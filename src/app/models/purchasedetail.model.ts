@@ -7,7 +7,9 @@ export class Purchasedetail {
 	tax?: number;
 	subtotal?: number;
 	product?: string;
+	uom?: string;
 	partner?: string;
 	warehouse?: string;
 	stockmove?: string;
+	date?: Date;
 }

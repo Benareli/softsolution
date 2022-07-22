@@ -1,0 +1,67 @@
+<div class="basic-container submit-form" fxLayout="column" fxLayoutAlign="space-between center" >
+<div class="width-100">
+  <div class="marginbot" fxLayout="row" fxLayoutAlign="space-between center">
+    <div>{{transidtitle}}</div>
+    <button class="close_btn" mat-button (click)="closeDialog()">X</button>
+  </div>
+
+  <div fxLayout="row">
+    <div class="flex50">
+      <div class="descrip">Dokumen Asal</div>
+      <div class="inputs">{{data.origin}}</div>
+    </div>
+    <div class="flex50 margin_7">
+      <div class="descrip">Tanggal</div>
+      <div class="inputs">{{data.date | date}}</div>
+    </div>
+  </div>
+
+  <div class="table-container" style="margin-top: 10pt;">
+  <mat-table #table [dataSource]="dataSource" class="mat-table">
+  <ng-container matColumnDef="product">
+    <th class="th-style" fxFlex="40%" mat-header-cell *matHeaderCellDef>Produk</th>
+    <td class="tr-style" fxFlex="40%" mat-cell *matCellDef="let datas">
+      {{datas.product.name}}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="qty">
+    <th class="th-style" fxFlex="10%" mat-header-cell *matHeaderCellDef>Jumlah</th>
+    <td class="tr-style" fxFlex="10%" mat-cell *matCellDef="let datas">
+      <span *ngIf="datas.qin">{{datas.qin}}</span>
+      <span *ngIf="datas.qout">-{{datas.qout}}</span>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="uom">
+    <th class="th-style" fxFlex="10%" mat-header-cell *matHeaderCellDef>Satuan</th>
+    <td class="tr-style" fxFlex="10%" mat-cell *matCellDef="let datas">
+      {{datas.uom.uom_name}}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="date">
+    <th class="th-style" fxFlex="20%" mat-header-cell *matHeaderCellDef>Tanggal</th>
+    <td class="tr-style" fxFlex="20%" mat-cell *matCellDef="let datas">
+      {{datas.date | date}}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="wh">
+    <th class="th-style" fxFlex="20%" mat-header-cell *matHeaderCellDef>Gudang</th>
+    <td class="tr-style" fxFlex="20%" mat-cell *matCellDef="let datas">
+      {{datas.warehouse.name}}
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns" class="tableHeader"></tr>
+  <tr mat-row class="tableRow" 
+      *matRowDef="let row; columns: displayedColumns;"  
+  ></tr>
+  </mat-table>
+  </div>
+</div>
+
+<div class="width-100" fxLayout="row" fxLayoutAlign="space-between center">
+  <div class="width-90">
+    <button mat-button class="save_btn" (click)="closeDialog()">Tutup</button>
+  </div>
+  <div class="width-10"><button class="log_btn" [(ngModel)]="log"><mat-icon>message</mat-icon> {{log}}</button></div>
+</div>
+</div>

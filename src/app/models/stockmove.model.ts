@@ -5,7 +5,9 @@ export class Stockmove {
 	product?: string;
 	partner?: string;
 	warehouse?: string;
+	origin?: string;
     qin?: number;
     qout?: number;
     cost?: number;
+    date?: Date;
 }

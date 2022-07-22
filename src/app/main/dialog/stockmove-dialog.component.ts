@@ -35,6 +35,7 @@ export class StockMoveDialogComponent implements OnInit {
   statusActive?: string;
   datname?: string;
   datuom?: string;
+  oriuom?: string;
   datsuom?: string;
   warehouseid?: any;
   partnerid?: any;
@@ -48,6 +49,7 @@ export class StockMoveDialogComponent implements OnInit {
   partners?: Partner[];
   uoms?: Uom[];
 
+  uom_big = 1;
   a = 0; b = 0;
   x = 0;
   isUpdated = 'update';
@@ -79,6 +81,7 @@ export class StockMoveDialogComponent implements OnInit {
       .subscribe(prod => {
         this.datname = prod.name;
         this.datuom = prod.suom._id;
+        this.oriuom = prod.suom._id;
         this.datsuom = prod.suom.uom_name;
         this.uom_cat = prod.suom.uom_cat;
         this.retrieveData();
@@ -91,12 +94,10 @@ export class StockMoveDialogComponent implements OnInit {
         this.warehouses = dataPC;
         this.warehouseid = dataPC[0].id;
       });
-
     this.partnerService.findAllActiveSupplier()
       .subscribe(dataB => {
         this.partners = dataB;
       });
-    console.log(this.uom_cat);
     this.uomService.getByCat(this.uom_cat)
       .subscribe(dataUO => {
         this.uoms = dataUO;
@@ -107,20 +108,33 @@ export class StockMoveDialogComponent implements OnInit {
     if(!this.warehouseid || this.warehouseid == null){
       this._snackBar.open("Gudang (*) tidak boleh kosong!", "Tutup", {duration: 5000});
     }else{
-      this.idService.getAll()
-        .subscribe(ids => {
-          if(ids[0]!.transfer_id! < 10) this.prefixes = '00000';
-          else if(ids[0]!.transfer_id! < 100) this.prefixes = '0000';
-          else if(ids[0]!.transfer_id! < 1000) this.prefixes = '000';
-          else if(ids[0]!.transfer_id! < 10000) this.prefixes = '00';
-          else if(ids[0]!.transfer_id! < 100000) this.prefixes = '0';
-          this.x = ids[0]!.transfer_id!;
-          this.transid = "TRANS"+new Date().getFullYear().toString().substr(-2)+
-          '0'+(new Date().getMonth() + 1).toString().slice(-2)+
-          this.prefixes+ids[0]!.transfer_id!.toString();
-          this.createSM(ids[0].id);
-        });
+      if(this.oriuom!=this.datuom){
+        this.uomService.get(this.datuom)
+          .subscribe(dataUO1 => {
+            //console.log(dataUO1.ratio);
+            this.uom_big = Number(dataUO1.ratio);
+            this.createSMid();
+          })
+      }else{
+        this.createSMid();
+      }
     }
+  }
+
+  createSMid(): void {
+    this.idService.getAll()
+      .subscribe(ids => {
+        if(ids[0]!.transfer_id! < 10) this.prefixes = '00000';
+        else if(ids[0]!.transfer_id! < 100) this.prefixes = '0000';
+        else if(ids[0]!.transfer_id! < 1000) this.prefixes = '000';
+        else if(ids[0]!.transfer_id! < 10000) this.prefixes = '00';
+        else if(ids[0]!.transfer_id! < 100000) this.prefixes = '0';
+        this.x = ids[0]!.transfer_id!;
+        this.transid = "TRANS"+new Date().getFullYear().toString().substr(-2)+
+        '0'+(new Date().getMonth() + 1).toString().slice(-2)+
+        this.prefixes+ids[0]!.transfer_id!.toString();
+        this.createSM(ids[0].id);
+      });
   }
 
   createSM(ids: string): void {
@@ -130,12 +144,12 @@ export class StockMoveDialogComponent implements OnInit {
       product: this.data,
       partner: this.partnerid ?? "null",
       warehouse: this.warehouseid,
-      qin: this.datqty ?? 0,
-      cost: this.datcost ?? 0,
+      qin: this.datqty * this.uom_big ?? 0,
+      cost: this.datcost / this.uom_big ?? 0,
       uom: this.datuom,
+      date: new Date(),
       meth: this.globals.cost_general
     };
-    console.log(dataSM);
     this.stockmoveService.create(dataSM)
       .subscribe(res => {
         const transfer_ids = {
@@ -153,9 +167,9 @@ export class StockMoveDialogComponent implements OnInit {
       product: this.data,
       partner: this.partnerid,
       warehouse: this.warehouseid,
-      qop: this.datqty,
+      qop: this.datqty * this.uom_big ?? 0,
       uom: this.datuom,
-      cost: this.datcost
+      cost: this.datcost / this.uom_big ?? 0
     }
     this.qopService.createUpdate(qop)
       .subscribe(res => {

@@ -18,51 +18,62 @@
 	</div>
 </div>
 
-<div fxLayout="row" fxLayoutAlign="space-around center" class="filtered" *ngIf="isShow">
-  <div *ngIf="isTM || isAdm" fxLayout="column">
-    
-  </div>      
+<div class="table-container">
+<mat-table #table [dataSource]="dataSource" class="mat-table">
+  <ng-container matColumnDef="po">
+    <th class="th-style" fxFlex="15%" mat-header-cell *matHeaderCellDef>Nomor PO</th>
+    <td class="tr-style" fxFlex="15%" mat-cell *matCellDef="let purchases">
+      <a (click)="openDialog(purchases.id)">
+        {{purchases.purchase_id}}</a>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="date">
+    <th class="th-style" fxFlex="10%" mat-header-cell *matHeaderCellDef>Tanggal</th>
+    <td class="tr-style" fxFlex="10%" mat-cell *matCellDef="let purchases">
+      <a (click)="openDialog(purchases.id)">{{purchases.date | date}}</a>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="supplier">
+    <th class="th-style" fxFlex="25%" mat-header-cell *matHeaderCellDef>Supplier</th>
+    <td class="tr-style" fxFlex="25%" mat-cell *matCellDef="let purchases">
+      <a (click)="openDialog(purchases.id)">{{purchases.supplier.name}}</a>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="subtotal">
+    <th class="th-style text-center" fxFlex="15%" mat-header-cell *matHeaderCellDef>Subtotal</th>
+    <td class="tr-style text-right" fxFlex="15%" mat-cell *matCellDef="let purchases">
+      <a (click)="openDialog(purchases.id)">{{purchases.amount_untaxed | number}}</a>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="disc">
+    <th class="th-style text-center" fxFlex="15%" mat-header-cell *matHeaderCellDef mat-sort-header>Diskon</th>
+    <td class="tr-style text-right" fxFlex="15%" mat-cell *matCellDef="let purchases">
+      <a (click)="openDialog(purchases.id)">{{purchases.discount | number}}</a>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="tax">
+    <th class="th-style text-center" fxFlex="15%" mat-header-cell *matHeaderCellDef mat-sort-header>Pajak</th>
+    <td class="tr-style text-right" fxFlex="15%" mat-cell *matCellDef="let purchases">
+      <a (click)="openDialog(purchases.id)">{{purchases.amount_tax | number}}</a>
+    </td>
+  </ng-container> 
+  <ng-container matColumnDef="total">
+    <th class="th-style text-center" fxFlex="20%" mat-header-cell *matHeaderCellDef mat-sort-header>Total</th>
+    <td class="tr-style text-right" fxFlex="20%" mat-cell *matCellDef="let purchases">
+      <a (click)="openDialog(purchases.id)">{{purchases.amount_total | number}}</a>
+    </td>
+  </ng-container> 
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns" class="tableHeader"></tr>
+  <tr mat-row class="tableRow" 
+      *matRowDef="let row; columns: displayedColumns;"
+      
+      [class.active]="clickedRows == row"
+  ></tr>
+  <!--(click)="openDialog(row)"-->
+</mat-table>
 </div>
 
-<div class="flex-container">
-  <div fxLayout="row" class="width100" fxLayoutAlign="space-between start">
-  	<div class="flex50 text-left">
-  	  <div fxLayout="column">
-  	    <div fxLayout="row">
-  	      <div class="flex30">Supplier</div>
-  	      <div class="flex70">
-  	        <select class="inputs" [(ngModel)]="supplierString">
-      		  <option *ngFor="let partner of partners" [value]="partner.id">
-          	    {{ partner.name }}
-        	  </option>
-      		</select>
-  	      </div>
-  	   	</div>
-  	  </div>
-  	  <div fxLayout="column">
-  	    <div fxLayout="row">
-  	      <div class="flex30">Gudang</div>
-  	      <div class="flex70">
-  	        <select class="inputs" [(ngModel)]="warehouseString">
-      		  <option *ngFor="let warehouse of warehouses" [value]="warehouse.id">
-          	    {{ warehouse.name }}
-        	  </option>
-      		</select>
-  	      </div>
-  	   	</div>
-  	  </div>
-  	</div>
-  	<div class="flex50 text-left">
-  	  <div fxLayout="column">
-  	    <div fxLayout="row">
-  	      <div class="flex30">Date</div>
-  	      <div class="flex70">
-  	        <input type="date" class="inputs"/>
-  	      </div>
-  	   	</div>
-  	  </div>
-  	</div>
-  </div>
+<div fxLayout="row" fxLayoutAlign="space-between center">
+  <mat-paginator [pageSizeOptions]="[10, 20, 50, 100]" showFirstLastButtons></mat-paginator>
 </div>
-
-<div class="">

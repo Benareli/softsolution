@@ -9,6 +9,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Log } from 'src/app/models/log.model';
 import { LogService } from 'src/app/services/log.service';
 import { FileUploadService } from 'src/app/services/file-upload.service';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { Product } from 'src/app/models/product.model';
@@ -17,6 +18,8 @@ import { Productcat } from 'src/app/models/productcat.model';
 import { ProductCatService } from 'src/app/services/product-cat.service';
 import { Brand } from 'src/app/models/brand.model';
 import { BrandService } from 'src/app/services/brand.service';
+import { Bundle } from 'src/app/models/bundle.model';
+import { BundleService } from 'src/app/services/bundle.service';
 import { Partner } from 'src/app/models/partner.model';
 import { PartnerService } from 'src/app/services/partner.service';
 import { Tax } from 'src/app/models/tax.model';
@@ -40,6 +43,7 @@ export class ProductDialogComponent implements OnInit {
   isDis = false;
   bbigger = false;
   isCG?: boolean = true;
+
   oriid?: string;
   orisku?: string;
   oriname?: string;
@@ -55,6 +59,8 @@ export class ProductDialogComponent implements OnInit {
   oriimage?: string;
   orimin?: number;
   orimax?: number;
+  orifg?: boolean;
+  orirm?: boolean;
   oricategoryid?: any;
   oribrandid?: any;
   oripartnerid?: any;
@@ -76,12 +82,15 @@ export class ProductDialogComponent implements OnInit {
   datisstock?: string;
   datmin?: number;
   datmax?: number;
+  datfg?: boolean;
+  datrm?: boolean;
   categoryid?: any;
   brandid?: any;
   partnerid?: any;
   taxinid?: any;
   taxoutid?: any;
   statusActive?: string;
+
   isIU = false;
   isIM = false;
   isAdm = false;
@@ -116,6 +125,24 @@ export class ProductDialogComponent implements OnInit {
   previews: string[] = [];
   imageInfos?: Observable<any>;
 
+  //Bundle
+  bproducts?: Product[];
+  currentIndex1 = -1;
+  term: string;
+  ph?: string = 'Ketik disini untuk cari';
+  openDropDown = false;
+  bdatid?: string;
+  bdatprod?: string;
+  bdatuom?: any;
+  bdatqty?: number;
+  bdatsuom?: string;
+
+  //Bundle Table
+  displayedColumnsBundle: string[] = 
+  ['product', 'qty', 'uom', 'action'];
+  dataSourceBundle = new MatTableDataSource<any>();
+  dataBundles?: any;
+
   constructor(
     public dialogRef: MatDialogRef<ProductDialogComponent>,
     private _snackBar: MatSnackBar,
@@ -123,6 +150,7 @@ export class ProductDialogComponent implements OnInit {
     private productService: ProductService,
     private brandService: BrandService,
     private productCatService: ProductCatService,
+    private bundleService: BundleService,
     private uomService: UomService,
     private partnerService: PartnerService,
     private taxService: TaxService,
@@ -137,6 +165,7 @@ export class ProductDialogComponent implements OnInit {
   ngOnInit() {
     if (this.data){
       this.checkData(this.data);
+      this.isNew = false;
     } else{
       this.isNew = true;
       this.isChecked = true;
@@ -190,6 +219,10 @@ export class ProductDialogComponent implements OnInit {
         this.orimin = prod.min;
         this.datmax = prod.max;
         this.orimax = prod.max;
+        this.orifg = prod.fg;
+        this.datfg = prod.fg;
+        this.orirm = prod.rm;
+        this.datrm = prod.rm;
         this.oriimage = prod.image;
         if (prod.active == true){
           this.statusActive = 'true';
@@ -283,6 +316,18 @@ export class ProductDialogComponent implements OnInit {
       .subscribe(sm => {
         if(sm.length>0) this.isDis = true;
       })
+    this.productService.findAllRMStock()
+      .subscribe(allrm => {
+        this.bproducts = allrm;
+      })
+    this.retrieveBundle();
+  }
+
+  retrieveBundle(): void{
+    this.bundleService.getByBundle(this.data)
+      .subscribe(bund => {
+        this.dataSourceBundle.data = bund;
+      })
   }
 
   retrieveLog(): void {
@@ -358,6 +403,49 @@ export class ProductDialogComponent implements OnInit {
         this.upload(i, this.selectedFiles[i]);
       }
     }
+  }
+
+  deleteBundle(id: string): void {
+    this.bundleService.delete(id)
+      .subscribe(res => {
+        this.retrieveBundle();
+      })
+  }
+
+  onF(): void {
+    this.openDropDown = !this.openDropDown;
+  }
+
+  getProd(product: Product, index: number): void {
+    this.currentIndex1 = index;
+    this.onF();
+    this.term = product.name!.toString();
+    this.ph = product.name;
+    this.bdatprod = product.name;
+    this.bdatid = product.id;
+    this.bdatqty = 1;
+    this.bdatuom = product.suom._id;
+    this.bdatsuom = product.suom.uom_name;
+  }
+
+  pushingBundle(): void {
+    const dataBundle = {
+      bundle: this.data,
+      qty: this.bdatqty,
+      uom: this.bdatuom,
+      product: this.bdatid
+    };
+    this.bundleService.create(dataBundle)
+      .subscribe(res => {
+        this.bdatid = undefined;
+        this.bdatprod = undefined;
+        this.bdatqty = undefined;
+        this.bdatuom = undefined;
+        this.bdatsuom = undefined;
+        this.ph = "Ketik disini untuk cari";
+        this.term = "";
+        this.retrieveBundle();
+      });
   }
 
   updateData(): void {
@@ -450,6 +538,7 @@ export class ProductDialogComponent implements OnInit {
         brand: this.brandid,
         min: this.datmin,
         max: this.datmax,
+        fg: this.datfg,
         supplier: this.partnerid,
         active: this.isChecked,
         message: this.isUpdated,
@@ -465,8 +554,10 @@ export class ProductDialogComponent implements OnInit {
   createData(): void {
     if (!this.datname || this.datname == null
       || !this.datlprice || this.datlprice == null
-      || !this.categoryid || this.categoryid == null){
-      this._snackBar.open("Field (*) tidak boleh kosong!", "Tutup", {duration: 5000});
+      || !this.categoryid || this.categoryid == null
+      || !this.datsuom || this.datsuom == null
+      || !this.datpuom || this.datpuom == null){
+      this._snackBar.open("Isian (*) tidak boleh kosong!", "Tutup", {duration: 5000});
     }else{
       const data = {
         sku: this.datsku,
@@ -484,6 +575,7 @@ export class ProductDialogComponent implements OnInit {
         taxin: this.taxinid,
         taxout: this.taxoutid,
         image: 'default.png',
+        fg: this.datfg,
         qoh: 0,
         min: this.datmin,
         max: this.datmax,

@@ -12,8 +12,8 @@ import { ProductService } from 'src/app/services/product.service';
 export class PosdetailDialogComponent implements OnInit {
   isChecked = false;
   statusActive?: string;
-  isTU = false;
-  isTM = false;
+  isPOSU = false;
+  isPOSM = false;
   isAdm = false;
   isRes = false;
   bbigger = false;
@@ -41,11 +41,11 @@ export class PosdetailDialogComponent implements OnInit {
 
   checkRole(): void {
     for(let x=0; x<this.globals.roles!.length;x++){
-      if(this.globals.roles![x]=="trans_user") this.isTU=true;
-      if(this.globals.roles![x]=="trans_manager") this.isTM=true;
+      if(this.globals.roles![x]=="pos_user") this.isPOSU=true;
+      if(this.globals.roles![x]=="pos_manager") this.isPOSM=true;
       if(this.globals.roles![x]=="admin") this.isAdm=true;
     };
-    if(!this.isTM || !this.isAdm) this.isRes = true;
+    if(!this.isPOSM || !this.isAdm) this.isRes = true;
   }
 
   press(key: string) {

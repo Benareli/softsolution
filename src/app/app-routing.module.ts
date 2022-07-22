@@ -11,10 +11,12 @@ import { BrandComponent } from './main/brand/brand.component';
 import { ProductComponent } from './main/product/product.component';
 import { UomComponent } from './main/uom/uom.component';
 import { WarehouseComponent } from './main/warehouse/warehouse.component';
+import { StockmoveComponent } from './main/stockmove/stockmove.component';
 import { PartnerComponent } from './main/partner/partner.component';
 import { PurchaseComponent } from './main/purchase/purchase.component';
 import { PosComponent } from './main/pos/pos.component';
 import { PosSessionComponent } from './main/pos-session/pos-session.component';
+import { JournalComponent } from './main/journal/journal.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -27,10 +29,12 @@ const routes: Routes = [
   { path: 'product', component: ProductComponent },
   { path: 'uom', component: UomComponent },
   { path: 'warehouse', component: WarehouseComponent },
+  { path: 'stockmove', component: StockmoveComponent },
   { path: 'partner', component: PartnerComponent },
   { path: 'purchase', component: PurchaseComponent },
   { path: 'pos', component: PosComponent },
   { path: 'pos-session', component: PosSessionComponent },
+  { path: 'journal', component: JournalComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];
 

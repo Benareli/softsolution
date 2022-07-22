@@ -20,7 +20,10 @@ export class StockmoveService {
       .pipe(map((response: any) => response.data as Stockmove[]))
   }
   get(id: any): Observable<Stockmove> {
-    return this.http.get(`${baseUrl}/${id}`);
+    return this.http.get(`${baseUrl}/id/${id}`);
+  }
+  getTransId(transid: any): Observable<Stockmove> {
+    return this.http.get(`${baseUrl}/transid/${transid}`);
   }
   getProd(product: any): Observable<Stockmove[]> {
     return this.http.get<Stockmove[]>(`${baseUrl}/prod/${product}`);

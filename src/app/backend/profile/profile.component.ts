@@ -16,13 +16,19 @@ export class ProfileComponent implements OnInit {
   roles?: Role[];
   isInvenDisabled = false;
   isPartnerDisabled = false;
-  isTransDisabled = false;
+  isAccDisabled = false;
+  isPurDisabled = false;
+  isPOSDisabled = false;
   isIManager = false;
   isPManager = false;
-  isTManager = false;
+  isAManager = false;
+  isPURManager = false;
+  isPOSManager = false;
   isIUser = false;
   isPUser = false;
-  isTUser = false
+  isAUser = false;
+  isPURUser = false;
+  isPOSUser = false;
   isAdmin = false;
   listRoles: any = [];
 
@@ -31,6 +37,7 @@ export class ProfileComponent implements OnInit {
     private token: TokenStorageService,
     private roleService: RoleService,
     private user2Service: User2Service,
+    private tokenStorageService: TokenStorageService
   ){
     this.retrieveRole();
   }
@@ -47,8 +54,14 @@ export class ProfileComponent implements OnInit {
   onPartner(enable: boolean) {if(enable){this.isPartnerDisabled=false;}else{this.isPartnerDisabled = true;}}
   onPManager(enable: boolean) {if(enable){this.isPManager=true;}else{this.isPManager=false;}}
 
-  onTrans(enable: boolean) {if(enable){this.isTransDisabled=false;}else{this.isTransDisabled=true;}}
-  onTManager(enable: boolean) {if(enable){this.isTManager=true;}else{this.isTManager=false;}}
+  onPur(enable: boolean) {if(enable){this.isPurDisabled=false;}else{this.isPurDisabled=true;}}
+  onPurManager(enable: boolean) {if(enable){this.isPURManager=true;}else{this.isPURManager=false;}}
+
+  onPOS(enable: boolean) {if(enable){this.isPOSDisabled=false;}else{this.isPOSDisabled=true;}}
+  onPOSManager(enable: boolean) {if(enable){this.isPOSManager=true;}else{this.isPOSManager=false;}}
+
+  onAcc(enable: boolean) {if(enable){this.isAccDisabled=false;}else{this.isAccDisabled=true;}}
+  onAManager(enable: boolean) {if(enable){this.isAManager=true;}else{this.isAManager=false;}}
 
   retrieveRole(): void {
     this.user2Service.get(this.globals.userid)
@@ -69,8 +82,12 @@ export class ProfileComponent implements OnInit {
       if(user.roles[x].name == "inventory_manager") this.isIManager=true;
       if(user.roles[x].name == "partner_user") {this.isPUser=true;this.isPartnerDisabled=false;}
       if(user.roles[x].name == "partner_manager") this.isPManager=true;
-      if(user.roles[x].name == "trans_user") {this.isTUser=true;this.isTransDisabled=false;}
-      if(user.roles[x].name == "trans_manager") this.isTManager=true;
+      if(user.roles[x].name == "purchase_user") {this.isPURUser=true;this.isPurDisabled=false;}
+      if(user.roles[x].name == "purchase_manager") this.isPURManager=true;
+      if(user.roles[x].name == "pos_user") {this.isPOSUser=true;this.isPOSDisabled=false;}
+      if(user.roles[x].name == "pos_manager") this.isPOSManager=true;
+      if(user.roles[x].name == "acc_user") {this.isAUser=true;this.isAccDisabled=false;}
+      if(user.roles[x].name == "acc_manager") this.isAManager=true;
     }
   }
   
@@ -93,11 +110,23 @@ export class ProfileComponent implements OnInit {
         this.listRoles.push(this.roles?.filter(role => role.name === "partner_user").map(role => role._id));
       }else this.listRoles.push(this.roles?.filter(role => role.name === "partner_user").map(role => role._id));
     }
-    if(!this.isTransDisabled){
-      if(this.isTManager){
-        this.listRoles.push(this.roles?.filter(role => role.name === "trans_manager").map(role => role._id));
-        this.listRoles.push(this.roles?.filter(role => role.name === "trans_user").map(role => role._id));
-      }else this.listRoles.push(this.roles?.filter(role => role.name === "trans_user").map(role => role._id));
+    if(!this.isPurDisabled){
+      if(this.isPURManager){
+        this.listRoles.push(this.roles?.filter(role => role.name === "purchase_manager").map(role => role._id));
+        this.listRoles.push(this.roles?.filter(role => role.name === "purchase_user").map(role => role._id));
+      }else this.listRoles.push(this.roles?.filter(role => role.name === "purchase_user").map(role => role._id));
+    }
+    if(!this.isPOSDisabled){
+      if(this.isPOSManager){
+        this.listRoles.push(this.roles?.filter(role => role.name === "pos_manager").map(role => role._id));
+        this.listRoles.push(this.roles?.filter(role => role.name === "pos_user").map(role => role._id));
+      }else this.listRoles.push(this.roles?.filter(role => role.name === "pos_user").map(role => role._id));
+    }
+    if(!this.isAccDisabled){
+      if(this.isAManager){
+        this.listRoles.push(this.roles?.filter(role => role.name === "acc_manager").map(role => role._id));
+        this.listRoles.push(this.roles?.filter(role => role.name === "acc_user").map(role => role._id));
+      }else this.listRoles.push(this.roles?.filter(role => role.name === "acc_user").map(role => role._id));
     }
     const dataRole = {
       roles: this.listRoles,
@@ -105,6 +134,8 @@ export class ProfileComponent implements OnInit {
     this.user2Service.update(this.globals.userid, dataRole)
       .subscribe({
         next: (res) => {
+          this.tokenStorageService.signOut();
+          window.location.reload();
         },
         error: (e) => console.error(e)
       });

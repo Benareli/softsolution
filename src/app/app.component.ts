@@ -23,14 +23,16 @@ export class AppComponent implements OnInit, AfterViewInit{
 
   isIU = false;
   isPU = false;
-  isTU = false;
+  isAU = false;
   isAdm = false;
-  isPOS = false;
+  isPOSU = false;
+  isPurU = false;
   pos_shift?: boolean;
 
   isProductShow = false;
   isPartnerShow = false;
   isTransacShow = false;
+  isAccShow = false;
 
   rute?: string;
 
@@ -63,6 +65,10 @@ export class AppComponent implements OnInit, AfterViewInit{
           this.rute = this.rute + ' | Pembelian';
           this.layPOS = false;
           this.wiggle();
+        }else if(event.url=="/stockmove"){
+          this.rute = this.rute + ' | Pergerakan Barang';
+          this.layPOS = false;
+          this.wiggle();
         }else if(event.url=="/partner"){
           this.rute = this.rute + ' | Pelanggan/Supplier';
           this.layPOS = false;
@@ -85,6 +91,10 @@ export class AppComponent implements OnInit, AfterViewInit{
           this.wiggle();
         }else if(event.url=="/brand"){
           this.rute = this.rute + ' | Merek';
+          this.layPOS = false;
+          this.wiggle();
+        }else if(event.url=="/journal"){
+          this.rute = this.rute + ' | Jurnal';
           this.layPOS = false;
           this.wiggle();
         }else if(event.url=="/setting"){
@@ -130,7 +140,9 @@ export class AppComponent implements OnInit, AfterViewInit{
     for(let x=0; x<this.roles!.length;x++){
       if(this.roles![x]=="inventory_user"){ this.isIU=true;}
       if(this.roles![x]=="partner_user"){ this.isPU=true;}
-      if(this.roles![x]=="trans_user"){ this.isTU=true;}
+      if(this.roles![x]=="purchase_user"){ this.isPurU=true;}
+      if(this.roles![x]=="pos_user"){ this.isPOSU=true;}
+      if(this.roles![x]=="acc_user"){ this.isAU=true;}
       if(this.roles![x]=="admin"){ this.isAdm=true;}
     };
   }
@@ -155,6 +167,10 @@ export class AppComponent implements OnInit, AfterViewInit{
 
   toggleTransac() {
     this.isTransacShow = !this.isTransacShow;
+  }
+
+  toggleAcc() {
+    this.isAccShow = !this.isAccShow;
   }
 
   logout(): void {

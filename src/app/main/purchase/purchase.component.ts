@@ -8,6 +8,7 @@ import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatDialog } from '@angular/material/dialog';
 import { DataFilter, filterOption } from 'src/app/models/datafilter';
+
 import { PurchaseDialogComponent } from '../dialog/purchase-dialog.component';
 
 import { Purchase } from 'src/app/models/purchase.model';
@@ -31,6 +32,7 @@ import { WarehouseService } from 'src/app/services/warehouse.service';
 export class PurchaseComponent implements OnInit {
   partners?: Partner[];
   warehouses?: Warehouse[];
+  purchases?: Purchase[];
   isTU = false;
   isTM = false;
   isAdm = false;
@@ -38,6 +40,16 @@ export class PurchaseComponent implements OnInit {
 
   supplierString?: string;
   warehouseString?: string;
+
+  //Table
+  displayedColumns: string[] = 
+  ['po', 'date', 'supplier', 'subtotal', 'disc', 'tax', 'total'];
+  dataSource = new MatTableDataSource<Purchase>();
+  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort!: MatSort;
+
+  //Dialog Data
+  clickedRows = null;
 
   constructor(
     private globals: Globals,
@@ -68,6 +80,13 @@ export class PurchaseComponent implements OnInit {
   }
 
   retrieveData(): void {
+    this.purchaseService.getAll()
+      .subscribe(dataPur => {
+        this.purchases = dataPur;
+        this.dataSource.data = dataPur;
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      })
     this.partnerService.findAllActiveSupplier()
       .subscribe(dataSup => {
         this.partners = dataSup;
@@ -89,8 +108,21 @@ export class PurchaseComponent implements OnInit {
       width: '100vw',
       height: '100%',
       disableClose: true,   
-    })
-      .afterClosed()
-      .subscribe(() => this.retrieveData());
+    }).afterClosed().subscribe(result => {
+      if(result) this.openDialog(result);
+      this.retrieveData();
+    });
+  }
+
+  openDialog(id: string) {
+    const dialog = this.dialog.open(PurchaseDialogComponent, {
+      width: '100vw',
+      height: '100%',
+      disableClose: true,
+      data: id
+    }).afterClosed().subscribe(result => {
+      if(result) this.openDialog(result);
+      this.retrieveData();
+    });
   }
 }

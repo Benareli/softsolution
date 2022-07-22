@@ -62,7 +62,10 @@
   <ng-container matColumnDef="qty">
     <th class="th-style" fxFlex="7%" mat-header-cell *matHeaderCellDef>Qty</th>
     <td class="tr-style" fxFlex="7%" mat-cell *matCellDef="let products">
-      <a (click)="openDialog(products.id)">{{products.qoh}}</a>
+      <!--<a (click)="openDialog(products.id)">{{products.qoh}}</a>-->
+      <div *ngIf="products.fg"></div>
+      <div *ngIf="!products.fg" style="cursor: default;">
+      <a (click)="openDialog(products.id)">{{products.qoh}}</a></div>
     </td>
   </ng-container>
   <ng-container matColumnDef="uom">
@@ -74,7 +77,7 @@
   <ng-container matColumnDef="listprice">
     <th class="th-style" fxFlex="12%" mat-header-cell *matHeaderCellDef>Harga Jual</th>
     <td class="tr-style" fxFlex="12%" mat-cell *matCellDef="let products">
-      <a (click)="openDialog(products.id)">{{products.listprice}}</a>
+      <a (click)="openDialog(products.id)">{{products.listprice | number}}</a>
     </td>
   </ng-container>
   <ng-container matColumnDef="category">
@@ -95,7 +98,9 @@
     <th class="th-style" fxFlex="43%" mat-header-cell *matHeaderCellDef>Aksi</th>
     <td class="tr-style" fxFlex="43%" mat-cell *matCellDef="let products">
       <div *ngIf="products.isStock == true">
-        <a class="add_stock" (click)="openStockDialog(products.id)">Tambah Stock</a>
+        <div *ngIf="products.fg"></div>
+        <div *ngIf="!products.fg" style="cursor: default;">
+        <a class="add_stock" (click)="openStockDialog(products.id)">Tambah Stock</a></div>
       </div>
     </td>
   </ng-container>

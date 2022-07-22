@@ -31,23 +31,34 @@
   <mat-sidenav-container class="mat-sidenav-container">
     <mat-sidenav mode="side" #sidenav="matSidenav" class="mat_sidenav">
       <div class="fullH" fxLayout="column" fxLayoutAlign="space-between start">
-        <div>
+        <div style="width: 100%;">
           <div fxLayout="row" *ngIf="sidenav.mode === 'over'" fxLayoutAlign="start center">
             <img src="/assets/img/s.png" width="45" [routerLink]="['/']">
             <span class="text-gradient" style="margin-left:10px;">Soft Solution</span>
           </div>
-          <button mat-button class="menu-button" [routerLink]="'/pos'" *ngIf="isLoggedIn && !pos_shift && isTU">
+          <button mat-button class="menu-button" [routerLink]="'/pos'" *ngIf="isLoggedIn && !pos_shift && isPOSU">
             <span>POS</span>
           </button>
-          <button mat-button class="menu-button" [routerLink]="'/pos-session'" *ngIf="isLoggedIn && pos_shift && isTU">
+          <button mat-button class="menu-button" [routerLink]="'/pos-session'" *ngIf="isLoggedIn && pos_shift && isPOSU">
             <span>POS</span>
           </button>
           <button mat-button class="menu-button" (click)="toggleTransac()" *ngIf="isLoggedIn && isIU">
             <span>Transaksi</span>
           </button>
-          <button mat-button class="menu-button" [routerLink]="'/purchase'" *ngIf="isLoggedIn && isTransacShow">
+          <button mat-button class="menu-button" [routerLink]="'/purchase'" *ngIf="isLoggedIn && isTransacShow && isPurU">
             <mat-icon class="mat-icon">keyboard_arrow_right</mat-icon>
             <span>Pembelian</span>
+          </button>
+          <button mat-button class="menu-button" [routerLink]="'/stockmove'" *ngIf="isLoggedIn && isTransacShow">
+            <mat-icon class="mat-icon">keyboard_arrow_right</mat-icon>
+            <span>Gerakan Barang</span>
+          </button>
+          <button mat-button class="menu-button" (click)="toggleAcc()" *ngIf="isLoggedIn && isAU">
+            <span>Akuntansi</span>
+          </button>
+          <button mat-button class="menu-button" [routerLink]="'/journal'" *ngIf="isLoggedIn && isAccShow">
+            <mat-icon class="mat-icon">keyboard_arrow_right</mat-icon>
+            <span>Jurnal</span>
           </button>
           <button mat-button class="menu-button" (click)="toggleProduct()" *ngIf="isLoggedIn && isIU">
             <span>Katalog Produk</span>
@@ -76,7 +87,7 @@
             <span>Katalog Partner</span>
           </button>
         </div>
-        <div *ngIf="sidenav.mode === 'side'" >
+        <div *ngIf="sidenav.mode === 'side'" style="width: 100%;">
           <button mat-button class="menu-button" [routerLink]="'/setting'" *ngIf="isLoggedIn && isAdm">
             <span>Setting</span>
           </button>

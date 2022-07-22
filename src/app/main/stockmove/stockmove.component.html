@@ -1,0 +1,48 @@
+<div class="flex-container">
+	<div class="flex-right">
+    <div fxLayout="row">
+      <input class="inputs" type="text" placeholder="Search data" (keyup)="applyFilter($event)">
+      <div (click)="toggleDisplay()" class="submit-form quick_add">
+        <button class="submit">Filter</button>
+      </div>
+    </div>
+	</div>
+</div>
+
+<div class="table-container">
+<mat-table #table [dataSource]="dataSource">
+  <ng-container matColumnDef="transid">
+    <th class="th-style" fxFlex="33%" mat-header-cell *matHeaderCellDef>ID Transaksi</th>
+    <td class="tr-style" fxFlex="33%" mat-cell *matCellDef="let stockmoves">
+      {{stockmoves.trans_id}}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="origin">
+    <th class="th-style" fxFlex="34%" mat-header-cell *matHeaderCellDef>Asal Dokumen</th>
+    <td class="tr-style" fxFlex="34%" mat-cell *matCellDef="let stockmoves">
+      {{stockmoves.origin}}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="date">
+    <th class="th-style" fxFlex="33%" mat-header-cell *matHeaderCellDef>Tanggal</th>
+    <td class="tr-style" fxFlex="33%" mat-cell *matCellDef="let stockmoves">
+      {{stockmoves.date | date}}
+    </td>
+  </ng-container>
+  <!--<ng-container matColumnDef="active">
+    <mat-header-cell *matHeaderCellDef>Active</mat-header-cell>
+    <mat-cell *matCellDef="let brands">{{brands.active}}</mat-cell>
+  </ng-container>-->
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns;" class="tableHeader"></tr>
+  <tr mat-row class="tableRow" 
+      *matRowDef="let row; columns: displayedColumns;"
+      (click)="openDialog(row)"
+      [class.active]="clickedRows == row"
+  ></tr>
+</mat-table>
+</div>
+
+<div fxLayout="row" fxLayoutAlign="space-between center">
+  <mat-paginator [pageSizeOptions]="[10, 20, 50, 100]" showFirstLastButtons></mat-paginator>
+</div>

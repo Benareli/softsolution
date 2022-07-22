@@ -11,7 +11,7 @@
       <mat-button-toggle class="paddingstock" value="false">Jasa</mat-button-toggle>
     </mat-button-toggle-group>
 
-    <mat-button-toggle-group class="active_btn margin_7" *ngIf="!isNew" [disabled]="isDis" #group2="matButtonToggleGroup" [(value)]="datisstock" (change)="onStockChange(group2.value)">
+    <mat-button-toggle-group class="active_btn margin_7" *ngIf="!isNew" [disabled]="!isDis" #group2="matButtonToggleGroup" [(value)]="datisstock" (change)="onStockChange(group2.value)">
       <mat-button-toggle class="paddingstock" value="true">Stock</mat-button-toggle>
       <mat-button-toggle class="paddingstock" value="false">Jasa</mat-button-toggle>
     </mat-button-toggle-group>
@@ -52,18 +52,29 @@
           </div>
         </div>
         <div class="holder" style="margin-top:7pt;">
-            <div class="descrip">Deskripsi</div>
-            <input class="inputs width-90" placeholder="Deskripsi" [(ngModel)]="datdesc">
+          <div class="descrip">Deskripsi</div>
+          <input class="inputs width-90" placeholder="Deskripsi" [(ngModel)]="datdesc">
         </div>
-        <div class="holder" style="margin-top:7pt;">
+        <div class="flexfull" style="margin-top:7pt;">
+          <div class="holder flex50">
             <div class="descrip">Barcode</div>
             <input class="inputs width-90" placeholder="Barcode" [(ngModel)]="datbarcode">
+          </div>
+          <div class="holder flex50 margin_7">
+            <div class="flexfull">
+              <mat-slide-toggle class="padtop flex50" *ngIf="isNew" [(ngModel)]="datfg">Bundle</mat-slide-toggle>
+              <mat-slide-toggle class="padtop flex50" *ngIf="!isNew" [disabled]="isDis" [(ngModel)]="datfg">Bundle</mat-slide-toggle>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="flexfull">
+<mat-tab-group mat-align-tabs="start" style="min-height: 205pt;">
+  <!--TAB1-->
+  <mat-tab label="Detail">
+    <div class="flexfull">
     <div class="flex50">
       <div class="holder-row" style="margin-top:7pt;">
         <div class="descrip flex30 harga">Harga Jual *</div>
@@ -142,7 +153,7 @@
       </div>
 
       <div class="holder-row" style="margin-top:7pt;">
-        <div class="descrip flex25 harga">Satuan Jual</div>
+        <div class="descrip flex25 harga">Satuan Jual *</div>
         <div class="flex25">
           <select class="inputs" [(ngModel)]="datsuom">
             <option value=""></option>
@@ -151,7 +162,7 @@
             </option>
           </select>
         </div>
-        <div class="descrip flex25 harga">Satuan Beli</div>
+        <div class="descrip flex25 harga">Satuan Beli *</div>
         <div class="flex25">
           <select class="inputs" [(ngModel)]="datpuom">
             <option value=""></option>
@@ -162,46 +173,111 @@
         </div>
       </div>
     </div>
-    
-  </div>
+    </div>
+  </mat-tab>
 
-  <div class="flexfull">
-  
-  </div>
-</div>
+  <!--TAB2-->
+  <mat-tab label="Quantity Detail" *ngIf="!isCG">
+    <mat-table *ngIf="!isCG" #table [dataSource]="dataSource" class="mat-table">
+      <ng-container matColumnDef="warehouse">
+        <th class="th-style" fxFlex="40%" mat-header-cell *matHeaderCellDef>Gudang</th>
+        <td class="tr-style" fxFlex="40%" mat-cell *matCellDef="let qops">
+          {{qops.warehouse.name}}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="partner">
+        <th class="th-style" fxFlex="40%" mat-header-cell *matHeaderCellDef>Supplier</th>
+        <td class="tr-style" fxFlex="40%" mat-cell *matCellDef="let qops">
+          <div *ngIf="!qops.partner"></div>
+          <div *ngIf="qops.partner">{{qops.partner.name}}</div>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="qty">
+        <th class="th-style" fxFlex="20%" mat-header-cell *matHeaderCellDef>Qty</th>
+        <td class="tr-style" fxFlex="20%" mat-cell *matCellDef="let qops">
+          {{qops.qop}}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="cost">
+        <th class="th-style" fxFlex="20%" mat-header-cell *matHeaderCellDef>HPP</th>
+        <td class="tr-style" fxFlex="20%" mat-cell *matCellDef="let qops">
+          {{qops.cost | number : '1.2-2' }}
+        </td>
+      </ng-container>
 
-<mat-table *ngIf="!isCG" #table [dataSource]="dataSource" class="mat-table">
-  <ng-container matColumnDef="warehouse">
-    <th class="th-style" fxFlex="40%" mat-header-cell *matHeaderCellDef>Gudang</th>
-    <td class="tr-style" fxFlex="40%" mat-cell *matCellDef="let qops">
-      {{qops.warehouse.name}}
-    </td>
-  </ng-container>
-  <ng-container matColumnDef="partner">
-    <th class="th-style" fxFlex="40%" mat-header-cell *matHeaderCellDef>Supplier</th>
-    <td class="tr-style" fxFlex="40%" mat-cell *matCellDef="let qops">
-      <div *ngIf="!qops.partner"></div>
-      <div *ngIf="qops.partner">{{qops.partner.name}}</div>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns" class="tableHeader"></tr>
+      <tr mat-row class="tableRow" 
+        *matRowDef="let row; columns: displayedColumns;"
+      ></tr>
+    </mat-table>
+  </mat-tab>
+
+  <!--TAB3-->
+  <mat-tab label="Bahan Baku" *ngIf="datfg">
+    <table class="table-new" style="margin-top: 0pt !important;">
+    <tr>
+      <th class="th-new" style="border-left:1px solid #ccc;" fxFlex="50%">Product</th>
+      <th class="th-new" fxFlex="20%">Qty</th>
+      <th class="th-new" fxFlex="20%">Satuan</th>
+    </tr>
+    <tr>
+      <td class="td-new" style="border-left:1px solid #ddd;" fxFlex="50%">
+        <input class="inputs width-100" (focus)="onF()" placeholder="{{ph}}" [(ngModel)]="term"/></td>
+      <td class="td-new" fxFlex="20%"><input class="inputs width-100" [(ngModel)]="bdatqty"/></td>
+      <td class="td-new" fxFlex="20%"><input class="inputs width-100" [(ngModel)]="bdatsuom"/></td>
+      <td class="td-new btn-rainbow" style="text-align:center;" fxFlex="10%"><button style="width:100%;background:none;border:none;color:white;" (click)="pushingBundle()">TAMBAH</button></td>
+      <!--(click)="pushing()"-->
+    </tr>
+  </table>
+  <ul class="prod" *ngIf="openDropDown">
+    <li class="list-group-item category"
+      *ngFor="let product of bproducts | filter:term; let i1 = index"
+      [class.active]="i1 == currentIndex1"
+      (click)="getProd(product, i1)">
+      {{ product.name }}
+    </li>
+  </ul>
+
+  <mat-table #table [dataSource]="dataSourceBundle" class="mat-table">
+  <ng-container matColumnDef="product">
+    <th class="th-style" fxFlex="50%" mat-header-cell *matHeaderCellDef>Product</th>
+    <td class="tr-style" fxFlex="50%" mat-cell *matCellDef="let datas">
+      {{datas.product.name}}
     </td>
   </ng-container>
   <ng-container matColumnDef="qty">
     <th class="th-style" fxFlex="20%" mat-header-cell *matHeaderCellDef>Qty</th>
-    <td class="tr-style" fxFlex="20%" mat-cell *matCellDef="let qops">
-      {{qops.qop}}
+    <td class="tr-style" fxFlex="20%" mat-cell *matCellDef="let datas">
+      {{datas.qty}}
     </td>
   </ng-container>
-  <ng-container matColumnDef="cost">
-    <th class="th-style" fxFlex="20%" mat-header-cell *matHeaderCellDef>HPP</th>
-    <td class="tr-style" fxFlex="20%" mat-cell *matCellDef="let qops">
-      {{qops.cost | number : '1.2-2' }}
+  <ng-container matColumnDef="uom">
+    <th class="th-style" fxFlex="20%" mat-header-cell *matHeaderCellDef>Satuan</th>
+    <td class="tr-style" fxFlex="20%" mat-cell *matCellDef="let datas">
+      {{datas.uom.uom_name}}
+    </td>
+  </ng-container> 
+  <ng-container matColumnDef="action">
+    <th class="th-style" fxFlex="10%" mat-header-cell *matHeaderCellDef></th>
+    <td class="tr-style text-right" fxFlex="10%" mat-cell *matCellDef="let datas">
+      <a class="add_stock" (click)="deleteBundle(datas.id)">Hapus</a>
     </td>
   </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns" class="tableHeader"></tr>
+  <!--<tr mat-header-row *matHeaderRowDef="displayedColumns" class="tableHeader"></tr>-->
   <tr mat-row class="tableRow" 
-      *matRowDef="let row; columns: displayedColumns;"
+      *matRowDef="let row; columns: displayedColumnsBundle;"
   ></tr>
 </mat-table>
+  </mat-tab>
+
+  <!--TAB4-->
+  <mat-tab label="Transaksi">Content 3</mat-tab>
+</mat-tab-group>
+
+  
+
+
 
 <div class="width-100" fxLayout="row" fxLayoutAlign="space-between center">
   <div class="width-90">

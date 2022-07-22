@@ -14,32 +14,68 @@
   </div>
 </div>
 
-<div class="flex-container section-setting">
-  <div class="flex-left width33 text-left">
-    <mat-slide-toggle class="padtop" [(ngModel)]="isIUser" (change)="onInven($event.checked)">Inventory - User</mat-slide-toggle>
+<div fxLayout="row" fxLayoutAlign="space-around start">
+  <span>Inventory</span>
+  <span>Partner</span>
+</div>
+<div fxLayout="row">
+  <div class="flex-container section-setting">
+    <div class="flex-left width33 text-left">
+      <mat-slide-toggle class="padtop" [(ngModel)]="isIUser" (change)="onInven($event.checked)">Inventory - User</mat-slide-toggle>
+    </div>
+    <div class="flex-right width60 text-left">
+      <mat-slide-toggle class="padtop" [(ngModel)]="isIManager" [disabled]="isInvenDisabled" (change)="onIManager($event.checked)">Manager</mat-slide-toggle>
+    </div>
   </div>
-  <div class="flex-right width60 text-left">
-    <mat-slide-toggle class="padtop" [(ngModel)]="isIManager" [disabled]="isInvenDisabled" (change)="onIManager($event.checked)">Manager</mat-slide-toggle>
+
+  <div class="flex-container section-setting">
+    <div class="flex-left width33 text-left">
+      <mat-slide-toggle class="padtop" [(ngModel)]="isPUser" (change)="onPartner($event.checked)">Partner - User</mat-slide-toggle>
+    </div>
+    <div class="flex-right width60 text-left">
+      <mat-slide-toggle class="padtop" [(ngModel)]="isPManager" [disabled]="isPartnerDisabled" (change)="onPManager($event.checked)">Manager</mat-slide-toggle>
+    </div>
   </div>
 </div>
 
-<div class="flex-container section-setting">
-  <div class="flex-left width33 text-left">
-    <mat-slide-toggle class="padtop" [(ngModel)]="isPUser" (change)="onPartner($event.checked)">Partner - User</mat-slide-toggle>
+<div fxLayout="row" fxLayoutAlign="space-around start">
+  <span>Purchase</span>
+  <span>POS</span>
+</div>
+<div fxLayout="row">
+  <div class="flex-container section-setting">
+    <div class="flex-left width33 text-left">
+      <mat-slide-toggle class="padtop" [(ngModel)]="isPURUser" (change)="onPur($event.checked)">Purchase - User</mat-slide-toggle>
+    </div>
+    <div class="flex-right width60 text-left">
+      <mat-slide-toggle class="padtop" [(ngModel)]="isPURManager" [disabled]="isPurDisabled" (change)="onPurManager($event.checked)">Manager</mat-slide-toggle>
+    </div>
   </div>
-  <div class="flex-right width60 text-left">
-    <mat-slide-toggle class="padtop" [(ngModel)]="isPManager" [disabled]="isPartnerDisabled" (change)="onPManager($event.checked)">Manager</mat-slide-toggle>
+
+  <div class="flex-container section-setting">
+    <div class="flex-left width33 text-left">
+      <mat-slide-toggle class="padtop" [(ngModel)]="isPOSUser" (change)="onPOS($event.checked)">POS - User</mat-slide-toggle>
+    </div>
+    <div class="flex-right width60 text-left">
+      <mat-slide-toggle class="padtop" [(ngModel)]="isPOSManager" [disabled]="isPOSDisabled" (change)="onPOSManager($event.checked)">Manager</mat-slide-toggle>
+    </div>
   </div>
 </div>
 
-<div class="flex-container section-setting">
-  <div class="flex-left width33 text-left">
-    <mat-slide-toggle class="padtop" [(ngModel)]="isTUser" (change)="onTrans($event.checked)">Transaction - User</mat-slide-toggle>
-  </div>
-  <div class="flex-right width60 text-left">
-    <mat-slide-toggle class="padtop" [(ngModel)]="isTManager" [disabled]="isTransDisabled" (change)="onTManager($event.checked)">Manager</mat-slide-toggle>
+<div fxLayout="row" fxLayoutAlign="space-around start">
+  <span>Accounting</span>
+</div>
+<div fxLayout="row">
+  <div class="flex-container section-setting">
+    <div class="flex-left width33 text-left">
+      <mat-slide-toggle class="padtop" [(ngModel)]="isAUser" (change)="onAcc($event.checked)">Accounting - User</mat-slide-toggle>
+    </div>
+    <div class="flex-right width60 text-left">
+      <mat-slide-toggle class="padtop" [(ngModel)]="isAManager" [disabled]="isAccDisabled" (change)="onAManager($event.checked)">Manager</mat-slide-toggle>
+    </div>
   </div>
 </div>
+
 <br/><br/>
 <div class="quick_add" (click)="test()">
   <button class="submit">Save</button>

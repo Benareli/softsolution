@@ -27,6 +27,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTabsModule } from '@angular/material/tabs';
 import { AppRoutingModule } from './app-routing.module';
 
 import { NgxFileDragDropModule } from "ngx-file-drag-drop";
@@ -48,6 +49,8 @@ import { PosSessionComponent } from './main/pos-session/pos-session.component';
 import { SettingComponent } from './backend/setting/setting.component';
 import { ProfileComponent } from './backend/profile/profile.component';
 import { PurchaseComponent } from './main/purchase/purchase.component';
+import { StockmoveComponent } from './main/stockmove/stockmove.component';
+import { JournalComponent } from './main/journal/journal.component';
 
 import { BrandDialogComponent } from './main/dialog/brand-dialog.component';
 import { ProductDialogComponent } from './main/dialog/product-dialog.component';
@@ -55,11 +58,14 @@ import { ProductcatDialogComponent } from './main/dialog/productcat-dialog.compo
 import { WarehouseDialogComponent } from './main/dialog/warehouse-dialog.component';
 import { PartnerDialogComponent } from './main/dialog/partner-dialog.component';
 import { StockMoveDialogComponent } from './main/dialog/stockmove-dialog.component';
+import { SMDetailDialogComponent } from './main/dialog/sm-detail-dialog.component';
 import { PosdetailDialogComponent } from './main/dialog/posdetail-dialog.component';
 import { PaymentDialogComponent } from './main/dialog/payment-dialog.component';
 import { UploadDialogComponent } from './main/dialog/upload-dialog.component';
 import { PurchaseDialogComponent } from './main/dialog/purchase-dialog.component';
+import { ReceivepartDialogComponent } from './main/dialog/receivepart-dialog.component';
 import { PrintposDialogComponent } from './main/dialog/printpos-dialog.component';
+import { EntryDialogComponent } from './main/dialog/entry-dialog.component';
 
 @NgModule({
   declarations: [
@@ -78,6 +84,9 @@ import { PrintposDialogComponent } from './main/dialog/printpos-dialog.component
     SettingComponent,
     ProfileComponent,
     PurchaseComponent,
+    UomComponent,
+    StockmoveComponent,
+    JournalComponent,
     
     ProductcatDialogComponent,
     BrandDialogComponent,
@@ -85,12 +94,14 @@ import { PrintposDialogComponent } from './main/dialog/printpos-dialog.component
     WarehouseDialogComponent,
     PartnerDialogComponent,
     StockMoveDialogComponent,
+    SMDetailDialogComponent,
     PosdetailDialogComponent,
     PaymentDialogComponent,
     UploadDialogComponent,
     PurchaseDialogComponent,
+    ReceivepartDialogComponent,
     PrintposDialogComponent,
-    UomComponent
+    EntryDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -123,6 +134,7 @@ import { PrintposDialogComponent } from './main/dialog/printpos-dialog.component
     MatButtonToggleModule,
     MatGridListModule,
     MatProgressBarModule,
+    MatTabsModule,
 
     NgxFileDragDropModule
   ],
