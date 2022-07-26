@@ -46,7 +46,6 @@ export class EntryDialogComponent implements OnInit {
       this.journidtitle = this.data.journal_id;
       this.entryService.getJournal(this.data.journal_id)
         .subscribe(entry => {
-          console.log(entry);
           this.datas = entry;
           this.dataSource.data = this.datas;
         })

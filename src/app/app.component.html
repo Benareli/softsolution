@@ -42,12 +42,15 @@
           <button mat-button class="menu-button" [routerLink]="'/pos-session'" *ngIf="isLoggedIn && pos_shift && isPOSU">
             <span>POS</span>
           </button>
+          <button mat-button class="menu-button" (click)="togglePur()" *ngIf="isLoggedIn && isPurU">
+            <span>Pembelian</span>
+          </button>
+          <button mat-button class="menu-button" [routerLink]="'/purchase'" *ngIf="isLoggedIn && isPurShow">
+            <mat-icon class="mat-icon">keyboard_arrow_right</mat-icon>
+            <span>PO</span>
+          </button>
           <button mat-button class="menu-button" (click)="toggleTransac()" *ngIf="isLoggedIn && isIU">
             <span>Transaksi</span>
-          </button>
-          <button mat-button class="menu-button" [routerLink]="'/purchase'" *ngIf="isLoggedIn && isTransacShow && isPurU">
-            <mat-icon class="mat-icon">keyboard_arrow_right</mat-icon>
-            <span>Pembelian</span>
           </button>
           <button mat-button class="menu-button" [routerLink]="'/stockmove'" *ngIf="isLoggedIn && isTransacShow">
             <mat-icon class="mat-icon">keyboard_arrow_right</mat-icon>

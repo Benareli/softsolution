@@ -9,5 +9,6 @@ export class Posdetail {
 	subtotal?: number;
 	product?: string;
 	warehouse?: string;
+	store?: string;
 	date?: Date;
 }

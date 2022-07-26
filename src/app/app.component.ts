@@ -32,6 +32,7 @@ export class AppComponent implements OnInit, AfterViewInit{
   isProductShow = false;
   isPartnerShow = false;
   isTransacShow = false;
+  isPurShow = false;
   isAccShow = false;
 
   rute?: string;
@@ -167,6 +168,10 @@ export class AppComponent implements OnInit, AfterViewInit{
 
   toggleTransac() {
     this.isTransacShow = !this.isTransacShow;
+  }
+
+  togglePur() {
+    this.isPurShow = !this.isPurShow;
   }
 
   toggleAcc() {

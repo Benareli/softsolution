@@ -7,6 +7,7 @@ export class Pos {
     amount_untaxed?: number;
    	amount_tax?: number;
     amount_total?: number;
+    store?: string;
     partner?: string;
     user?: string;
 }

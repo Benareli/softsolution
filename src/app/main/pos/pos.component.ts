@@ -55,6 +55,7 @@ export class PosComponent {
   pss?: Pos[];
   posdetails?: Posdetail[];
   partnerid?: string;
+  storeid?: string;
   warehouseid?: string;
   orders: Array<any> = [];
   cols: number;
@@ -121,7 +122,10 @@ export class PosComponent {
   selectedValue2(event: MatSelectChange) {
     //this.warehouseid = event.value;
     this.storeService.get(event.value)
-      .subscribe(sw => {this.warehouseid=sw.warehouse._id;})
+      .subscribe(sw => {
+        this.warehouseid = sw.warehouse._id;
+        this.selectedStore = sw.id;
+      })
   }
 
   //Grid
@@ -466,30 +470,13 @@ export class PosComponent {
 
   startPay(): void{
     if(this.orders.length>0){
-      this.idService.getAll()
+      this.idService.getPOSId()
         .subscribe({
           next: (ids) => {
-            if(ids[0]!.pos_id! < 10) this.prefixes = '00000';
-            else if(ids[0]!.pos_id! < 100) this.prefixes = '0000';
-            else if(ids[0]!.pos_id! < 1000) this.prefixes = '000';
-            else if(ids[0]!.pos_id! < 10000) this.prefixes = '00';
-            else if(ids[0]!.pos_id! < 100000) this.prefixes = '0';
-            let x = ids[0]!.pos_id!;
-            this.posid = "POSS"+new Date().getFullYear().toString().substr(-2)+
-            '0'+(new Date().getMonth() + 1).toString().slice(-2)+
-            this.prefixes+ids[0]!.pos_id!.toString();
-            //this.createPOS();
-            const pos_ids = {
-              pos_id: x + 1
-            };
-            this.idService.update(ids[0].id, pos_ids)
-              .subscribe({
-                next: (res) => {
-                  this.openPayment();
-                },error: (e) => console.error(e)
-              });
-          },error: (e) => console.error(e)
-      });
+            this.posid = ids.message;
+            this.openPayment();
+          }
+        })
     }else{
       this._snackBar.open("Order Kosong", "Tutup", {duration: 5000});
     }
@@ -543,20 +530,9 @@ export class PosComponent {
     if(!this.globals.pos_session_id || this.globals.pos_session_id == null
       || this.globals.pos_session_id==''){ this.sess_id = "null" }
       else{ this.sess_id = this.globals.pos_session_id};
-    this.idService.getAll()
-      .subscribe(ids => {
-        if(ids[0]!.pay_id! < 10) this.prefixes = '00000';
-        else if(ids[0]!.pay_id! < 100) this.prefixes = '0000';
-        else if(ids[0]!.pay_id! < 1000) this.prefixes = '000';
-        else if(ids[0]!.pay_id! < 10000) this.prefixes = '00';
-        else if(ids[0]!.pay_id! < 100000) this.prefixes = '0';
-        let y = ids[0]!.pay_id!;
-        this.payid = "PAY"+new Date().getFullYear().toString().substr(-2)+
-          '0'+(new Date().getMonth() + 1).toString().slice(-2)+
-        this.prefixes+ids[0]!.pos_id!.toString();
-        const pay_ids = {
-          pay_id: y + 1
-        };
+    this.idService.getPaymentId()
+      .subscribe(idp => {
+        this.payid = idp.message;
         const payments = {pay_id: this.payid,session: this.sess_id,order_id: this.posid,
           amount_total: this.total,payment1: res.payment1,pay1method: res.pay1Type,
           payment2: res.payment2,pay2method: res.pay2Type,change: res.change,changeMethod: "tunai",
@@ -564,14 +540,9 @@ export class PosComponent {
         };
         this.paymentService.create(payments)
           .subscribe(res => {
-            this.idService.update(ids[0].id, pay_ids)
-              .subscribe(res2 => {
-                this.createPOS(res.id);
-                  //this.openPrint();
-                });
-            })
-        
-    });
+            this.createPOS(res.id);
+          })
+      })
   }
 
   createPOS(payment: any): void {
@@ -580,6 +551,7 @@ export class PosComponent {
       else{ this.sess_id = this.globals.pos_session_id}
     const posdata = {
       order_id: this.posid,
+      store: this.selectedStore,
       partner: this.partnerid ?? "null",
       disc_type: this.discType,
       discount: this.disc,
@@ -629,6 +601,7 @@ export class PosComponent {
         product: product,
         isStock: isStock,
         qop: qop,
+        store: this.selectedStore,
         date: this.today,
         warehouse: this.warehouseid,
         user: this.globals.userid,

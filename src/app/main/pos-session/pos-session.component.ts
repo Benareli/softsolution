@@ -130,20 +130,9 @@ export class PosSessionComponent implements OnInit {
     this.opened = true;
     this.isCalc = false;
     if(!this.globals.pos_open){
-      this.idService.getAll()
-        .subscribe(ids => {
-          if(ids[0]!.pos_session! < 10) this.prefixes = '0000';
-          else if(ids[0]!.pos_session! < 100) this.prefixes = '000';
-          else if(ids[0]!.pos_session! < 1000) this.prefixes = '00';
-          else if(ids[0]!.pos_session! < 10000) this.prefixes = '0';
-          let x = ids[0]!.pos_session!;
-          this.possession = "SES"+new Date().getFullYear().toString().substr(-2)+
-          '0'+(new Date().getMonth() + 1).toString().slice(-2)+
-          this.prefixes+ids[0]!.pos_session!.toString();
-          
-          const pos_sessions = {
-            pos_session: x + 1
-          };
+      this.idService.getPOSessId()
+        .subscribe(idps => {
+          this.possession = idps.message;
           if (!this.startB || this.startB==null) this.startB = '0';
           const current = new Date();
           const timestamp = current.getTime();
@@ -163,11 +152,8 @@ export class PosSessionComponent implements OnInit {
               this.globals.pos_session_id = res.id;
               this.globals.pos_open = true;
               this.isOpen = true;
-              this.idService.update(ids[0].id, pos_sessions)
-                .subscribe(res => {
-                });
             })
-      });
+        })
     }
   }
 

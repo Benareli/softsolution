@@ -15,6 +15,15 @@ export class IdService {
   getAll(): Observable<Id[]> {
     return this.http.get<Id[]>(baseUrl);
   }
+  getPOSessId(): Observable<any> {
+    return this.http.get<any>(`${baseUrl}/posessid`);
+  }
+  getPOSId(): Observable<any> {
+    return this.http.get<any>(`${baseUrl}/posid`);
+  }
+  getPaymentId(): Observable<any> {
+    return this.http.get<any>(`${baseUrl}/paymentid`);
+  }
   update(id: any, data: any): Observable<any> {
     return this.http.put(`${baseUrl}/${id}`, data);
   }
