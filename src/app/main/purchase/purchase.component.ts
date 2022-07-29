@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, FormControl } from '@angular/forms';
 import { Observable, of } from "rxjs";
 import { Globals } from 'src/app/global';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, SortDirection } from '@angular/material/sort';
@@ -33,8 +34,8 @@ export class PurchaseComponent implements OnInit {
   partners?: Partner[];
   warehouses?: Warehouse[];
   purchases?: Purchase[];
-  isTU = false;
-  isTM = false;
+  isPurU = false;
+  isPurM = false;
   isAdm = false;
   isShow = false;
 
@@ -52,6 +53,7 @@ export class PurchaseComponent implements OnInit {
   clickedRows = null;
 
   constructor(
+    private router: Router,
     private globals: Globals,
     private dialog: MatDialog,
     private purchaseService: PurchaseService,
@@ -72,10 +74,11 @@ export class PurchaseComponent implements OnInit {
 
   checkRole(): void {
     for(let x=0; x<this.globals.roles!.length;x++){
-      if(this.globals.roles![x]=="trans_user") this.isTU=true;
-      if(this.globals.roles![x]=="trans_manager") this.isTM=true;
+      if(this.globals.roles![x]=="purchase_user") this.isPurU=true;
+      if(this.globals.roles![x]=="purchase_manager") this.isPurM=true;
       if(this.globals.roles![x]=="admin") this.isAdm=true;
     };
+    if(!this.isPurU) this.router.navigate(['/']);
     this.retrieveData();
   }
 

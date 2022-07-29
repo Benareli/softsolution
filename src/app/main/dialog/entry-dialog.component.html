@@ -27,8 +27,8 @@
   <ng-container matColumnDef="account">
     <th class="th-style" fxFlex="20%" mat-header-cell *matHeaderCellDef>Akun</th>
     <td class="tr-style" fxFlex="20%" mat-cell *matCellDef="let datas">
-      <span *ngIf="datas.debit">{{datas.debit_acc.code}} - {{datas.debit_acc.name}}</span>
-      <span *ngIf="datas.credit">{{datas.credit_acc.code}} - {{datas.credit_acc.name}}</span>
+      <span *ngIf="datas.debit &gt; -1">{{datas.debit_acc.code}} - {{datas.debit_acc.name}}</span>
+      <span *ngIf="datas.credit &gt; -1">{{datas.credit_acc.code}} - {{datas.credit_acc.name}}</span>
     </td>
   </ng-container>
   <ng-container matColumnDef="debit">

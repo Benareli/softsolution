@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Globals } from 'src/app/global';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Warehouse } from 'src/app/models/warehouse.model';
 import { WarehouseService } from 'src/app/services/warehouse.service';
 import { Log } from 'src/app/models/log.model';
@@ -49,6 +50,7 @@ export class WarehouseComponent implements OnInit {
   clickedRows = null;
  
   constructor(
+    private router: Router,
     private globals: Globals,
     private _snackBar: MatSnackBar,
     private warehouseService: WarehouseService,
@@ -70,6 +72,7 @@ export class WarehouseComponent implements OnInit {
       if(this.globals.roles![x]=="inventory_manager") this.isIM=true;
       if(this.globals.roles![x]=="admin") this.isAdm=true;
     };
+    if(!this.isIM) this.router.navigate(['/']);
     this.retrieveWarehouse();
   }
 

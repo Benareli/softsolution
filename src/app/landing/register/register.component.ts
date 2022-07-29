@@ -1,20 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.sass']
+  styleUrls: ['../login/login.component.sass']
 })
 export class RegisterComponent implements OnInit {
   form: any = {
     username: null,
     password: null
   };
-  isSuccessful = false;
-  isSignUpFailed = false;
+  isSuccessful = false  isSignUpFailed = false;
   errorMessage = '';
-  constructor(private authService: AuthService) { }
+  constructor(
+    public dialogRef: MatDialogRef<RegisterComponent>,
+    private authService: AuthService
+  ) { }
   ngOnInit(): void {
   }
   onSubmit(): void {
@@ -24,6 +27,7 @@ export class RegisterComponent implements OnInit {
         console.log(data);
         this.isSuccessful = true;
         this.isSignUpFailed = false;
+        this.dialogRef.close();
       },
       error: err => {
         this.errorMessage = err.error.message;

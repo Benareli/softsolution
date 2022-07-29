@@ -75,8 +75,8 @@ export class PosComponent {
   disc: string="0";
   discType: string='percent';
 
-  isTU = false;
-  isTM = false;
+  isPOSU = false;
+  isPOSM = false;
   isAdm = false;
 
   currentIndex1 = -1;
@@ -176,10 +176,11 @@ export class PosComponent {
 
   checkRole(): void {
     for(let x=0; x<this.globals.roles!.length;x++){
-      if(this.globals.roles![x]=="trans_user") this.isTU=true;
-      if(this.globals.roles![x]=="trans_manager") this.isTM=true;
+      if(this.globals.roles![x]=="pos_user") this.isPOSU=true;
+      if(this.globals.roles![x]=="pos_manager") this.isPOSM=true;
       if(this.globals.roles![x]=="admin") this.isAdm=true;
     };
+    if(!this.isPOSU) this.router.navigate(['/']);
     this.retrieveData();
   }
 

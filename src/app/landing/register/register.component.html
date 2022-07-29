@@ -1,4 +1,32 @@
-<div class="col-md-12">
+<form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
+  <mat-form-field class="input_field">
+    <mat-label class="input_label">Username</mat-label>
+    <input matInput type="text" class="form-control" name="username" [(ngModel)]="form.username" required #username="ngModel">
+  </mat-form-field>
+  <div class="alert" role="alert" *ngIf="username.errors && f.submitted">
+    Username harus diisi!
+  </div>
+  <mat-form-field class="input_field">
+    <mat-label class="input_label">Password</mat-label>
+    <input matInput type="password" class="form-control" name="password" [(ngModel)]="form.password" required
+    minlength="6" #password="ngModel">
+  </mat-form-field>
+  <div class="alert" role="alert" *ngIf="password.errors && f.submitted">
+    <div *ngIf="password.errors['required']">Password harus diisi!</div>
+    <div *ngIf="password.errors['minlength']">Password harus lebih dari 6 karakter</div>
+  </div>
+  <button class="login_btn btn btn-primary btn-block">
+    Daftar
+  </button>
+  <div class="alert" role="alert" *ngIf="f.submitted && isSignUpFailed">
+    Signup gagal: {{ errorMessage }}
+  </div>
+  <div class="alert" role="alert" *ngIf="f.submitted && isSuccessful">
+    Signup Berhasil
+  </div>
+</form>
+
+<!--<div class="col-md-12">
   <div class="card card-container">
     <form
       *ngIf="!isSuccessful"
@@ -59,4 +87,4 @@
       Your registration is successful!
     </div>
   </div>
-</div>
+</div>-->

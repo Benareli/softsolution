@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, FormControl } from '@angular/forms';
 import { Observable, of } from "rxjs";
 import { Globals } from 'src/app/global';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, SortDirection } from '@angular/material/sort';
@@ -58,6 +59,7 @@ export class ProductComponent implements OnInit {
   clickedRows = null;
 
   constructor(
+    private router: Router,
     private globals: Globals,
     private productService: ProductService,
     private productCatService: ProductCatService,
@@ -76,6 +78,7 @@ export class ProductComponent implements OnInit {
       if(this.globals.roles![x]=="inventory_manager") this.isIM=true;
       if(this.globals.roles![x]=="admin") this.isAdm=true;
     };
+    if(!this.isIU) this.router.navigate(['/']);
     this.retrieveProduct();
   }
 

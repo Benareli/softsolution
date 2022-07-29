@@ -7,6 +7,13 @@
 ::-webkit-scrollbar
   width: 0
 
+@mixin gradient-text($angle: 45deg, $color: #3f5efb, $pink: #fc466b, $amount: 0%)
+  color: $color
+  background: -webkit-linear-gradient($angle, $color, adjust-hue($pink, $amount))
+  -webkit-text-fill-color: transparent
+  -webkit-background-clip: text
+  display: inline-block
+
 .basic-container
   width: 100%
   position: relative
@@ -45,6 +52,17 @@
 .btn-rainbow17
   width: 17pt
   height: 17pt
+
+.btn-gradient
+  border: 0
+  font-size: 1.1em
+  font-family: 'Aleo', serif
+  font-weight: 400
+  text-transform: uppercase
+  letter-spacing: 1pt
+
+.text-gradient
+  @include gradient-text
 
 .paddingstock
   padding: 0pt 30pt

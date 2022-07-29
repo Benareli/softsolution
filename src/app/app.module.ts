@@ -66,6 +66,7 @@ import { PurchaseDialogComponent } from './main/dialog/purchase-dialog.component
 import { ReceivepartDialogComponent } from './main/dialog/receivepart-dialog.component';
 import { PrintposDialogComponent } from './main/dialog/printpos-dialog.component';
 import { EntryDialogComponent } from './main/dialog/entry-dialog.component';
+import { UserroleDialogComponent } from './main/dialog/userrole-dialog.component';
 
 @NgModule({
   declarations: [
@@ -102,6 +103,7 @@ import { EntryDialogComponent } from './main/dialog/entry-dialog.component';
     ReceivepartDialogComponent,
     PrintposDialogComponent,
     EntryDialogComponent,
+    UserroleDialogComponent,
   ],
   imports: [
     BrowserModule,

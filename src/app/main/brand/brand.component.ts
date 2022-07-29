@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Globals } from 'src/app/global';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Brand } from 'src/app/models/brand.model';
 import { BrandService } from 'src/app/services/brand.service';
 import { Log } from 'src/app/models/log.model';
@@ -47,6 +48,7 @@ export class BrandComponent implements OnInit {
   clickedRows = null;
  
   constructor(
+    private router: Router,
     private globals: Globals,
     private _snackBar: MatSnackBar,
     private brandService: BrandService,
@@ -68,6 +70,7 @@ export class BrandComponent implements OnInit {
       if(this.globals.roles![x]=="inventory_manager") this.isIM=true;
       if(this.globals.roles![x]=="admin") this.isAdm=true;
     };
+    if(!this.isIM) this.router.navigate(['/']);
     this.retrieveBrand();
   }
 

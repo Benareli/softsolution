@@ -99,7 +99,7 @@
     <td class="tr-style" fxFlex="43%" mat-cell *matCellDef="let products">
       <div *ngIf="products.isStock == true">
         <div *ngIf="products.fg"></div>
-        <div *ngIf="!products.fg" style="cursor: default;">
+        <div *ngIf="!products.fg && isIM" style="cursor: default;">
         <a class="add_stock" (click)="openStockDialog(products.id)">Tambah Stock</a></div>
       </div>
     </td>

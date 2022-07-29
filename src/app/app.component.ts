@@ -16,17 +16,22 @@ import { User2Service } from 'src/app/services/user2.service';
   styleUrls: ['./app.component.sass']
 })
 export class AppComponent implements OnInit, AfterViewInit{
-  title = 'Soft Solution';
+  title = 'Ablouz';
 
   layPOS = false;
   maxWidth = false;
 
   isIU = false;
+  isIM = false;
   isPU = false;
+  isPM = false;
   isAU = false;
+  isAM = false;
   isAdm = false;
   isPOSU = false;
+  isPOSM = false;
   isPurU = false;
+  isPurM = false;
   pos_shift?: boolean;
 
   isProductShow = false;
@@ -53,7 +58,7 @@ export class AppComponent implements OnInit, AfterViewInit{
   ){ 
     router.events.subscribe(event => {
       if(event instanceof NavigationEnd){
-        this.rute = 'Soft Solution';
+        this.rute = 'Ablouz';
         if(event.url=="/pos"){
           this.rute = 'POS';
           this.layPOS = true;
@@ -140,10 +145,15 @@ export class AppComponent implements OnInit, AfterViewInit{
   checkRole() {
     for(let x=0; x<this.roles!.length;x++){
       if(this.roles![x]=="inventory_user"){ this.isIU=true;}
+      if(this.roles![x]=="inventory_manager"){ this.isIM=true;}
       if(this.roles![x]=="partner_user"){ this.isPU=true;}
+      if(this.roles![x]=="partner_manager"){ this.isPM=true;}
       if(this.roles![x]=="purchase_user"){ this.isPurU=true;}
+      if(this.roles![x]=="purchase_manager"){ this.isPurM=true;}
       if(this.roles![x]=="pos_user"){ this.isPOSU=true;}
+      if(this.roles![x]=="pos_manager"){ this.isPOSM=true;}
       if(this.roles![x]=="acc_user"){ this.isAU=true;}
+      if(this.roles![x]=="acc_manager"){ this.isAM=true;}
       if(this.roles![x]=="admin"){ this.isAdm=true;}
     };
   }

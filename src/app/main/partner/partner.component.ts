@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Partner } from 'src/app/models/partner.model';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { PartnerService } from 'src/app/services/partner.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -43,6 +44,7 @@ export class PartnerComponent implements OnInit {
   clickedRows = null;
  
   constructor(
+    private router: Router,
     private partnerService: PartnerService,
     private dialog: MatDialog
   ) { }

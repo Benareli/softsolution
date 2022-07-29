@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Globals } from 'src/app/global';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Log } from 'src/app/models/log.model';
 import { LogService } from 'src/app/services/log.service';
 import { Productcat } from 'src/app/models/productcat.model';
@@ -49,6 +50,7 @@ export class ProductCatComponent implements OnInit {
   clickedRows = null;
  
   constructor(
+    private router: Router,
     private globals: Globals,
     private _snackBar: MatSnackBar,
     private logService: LogService,
@@ -70,6 +72,7 @@ export class ProductCatComponent implements OnInit {
       if(this.globals.roles![x]=="inventory_manager") this.isIM=true;
       if(this.globals.roles![x]=="admin") this.isAdm=true;
     };
+    if(!this.isIM) this.router.navigate(['/']);
     this.retrieveProductCat();
   }
 

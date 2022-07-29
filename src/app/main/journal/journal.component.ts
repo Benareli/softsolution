@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Globals } from 'src/app/global';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Journal } from 'src/app/models/journal.model';
 import { JournalService } from 'src/app/services/journal.service';
 import { Log } from 'src/app/models/log.model';
@@ -20,8 +21,8 @@ import { EntryDialogComponent } from '../dialog/entry-dialog.component';
 })
 export class JournalComponent implements OnInit {
   journals?: Journal[];
-  isIU = false;
-  isIM = false;
+  isAccU = false;
+  isAccM = false;
   isAdm = false;
   isShow = false;
   datas?: any;
@@ -36,6 +37,7 @@ export class JournalComponent implements OnInit {
   clickedRows = null;
 
   constructor(
+    private router: Router,
     private globals: Globals,
     private _snackBar: MatSnackBar,
     private journalService: JournalService,
@@ -53,10 +55,11 @@ export class JournalComponent implements OnInit {
 
   checkRole(): void {
     for(let x=0; x<this.globals.roles!.length;x++){
-      if(this.globals.roles![x]=="inventory_user") this.isIU=true;
-      if(this.globals.roles![x]=="inventory_manager") this.isIM=true;
+      if(this.globals.roles![x]=="acc_user") this.isAccU=true;
+      if(this.globals.roles![x]=="acc_manager") this.isAccM=true;
       if(this.globals.roles![x]=="admin") this.isAdm=true;
     };
+    if(!this.isAccU) this.router.navigate(['/']);
     this.retrieveData();
   }
 

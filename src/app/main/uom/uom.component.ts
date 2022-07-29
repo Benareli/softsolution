@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Globals } from 'src/app/global';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Uom } from 'src/app/models/uom.model';
 import { UomService } from 'src/app/services/uom.service';
 import { Uomcat } from 'src/app/models/uomcat.model';
@@ -45,6 +46,7 @@ export class UomComponent implements OnInit {
   clickedRows = null;
 
   constructor(
+    private router: Router,
     private globals: Globals,
     private _snackBar: MatSnackBar,
     private uomService: UomService,
@@ -63,6 +65,7 @@ export class UomComponent implements OnInit {
       if(this.globals.roles![x]=="inventory_manager") this.isIM=true;
       if(this.globals.roles![x]=="admin") this.isAdm=true;
     };
+    if(!this.isIM) this.router.navigate(['/']);
     this.retrieveUom();
   }
 
